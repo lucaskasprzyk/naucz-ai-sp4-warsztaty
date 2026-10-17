@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warsztat AI — karta zadania</title>
+<!-- Interaktywna karta warsztatu (spotkanie 1). Jeden plik, bez serwera: notatki zapisują się w przeglądarce uczestnika (localStorage), „Pobierz notatki” daje plik .txt. Treść = karty-druk.html (wersja papierowa = plan B). -->
+<style>
+  :root {
+    --bg: #f6f5f2; --card: #ffffff; --ink: #1c1c1c; --muted: #5d5d5d; --line: #d8d6d0;
+    --accent: #1f5f8b; --accent-ink: #ffffff; --soft: #eef3f7; --warn: #8a4b00; --warn-bg: #fff4e5; --ok: #2e7d32;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #161718; --card: #212325; --ink: #ececec; --muted: #a8a8a8; --line: #3a3d40;
+      --accent: #6fb0dc; --accent-ink: #0d1a24; --soft: #1d2a33; --warn: #ffc27a; --warn-bg: #33270f; --ok: #81c784;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161718; --card: #212325; --ink: #ececec; --muted: #a8a8a8; --line: #3a3d40;
+    --accent: #6fb0dc; --accent-ink: #0d1a24; --soft: #1d2a33; --warn: #ffc27a; --warn-bg: #33270f; --ok: #81c784;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 "Helvetica Neue", Arial, sans-serif; }
+  a { color: var(--accent); }
+  body { overflow-wrap: break-word; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 18px; font-size: 0.95rem; }
+  .picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+  .picker button { text-align: left; border: 2px solid var(--line); background: var(--card); color: var(--ink); border-radius: 12px; padding: 12px; cursor: pointer; font: inherit; }
+  .picker button b { display: block; font-size: 1.6rem; line-height: 1; margin-bottom: 4px; }
+  .picker button[aria-pressed="true"] { border-color: var(--accent); background: var(--soft); }
+  @media (max-width: 560px) { .picker { grid-template-columns: 1fr; } .picker button b { display: inline; margin-right: 8px; } }
+  section.step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+  .step h2 { font-size: 1.15rem; margin: 0 0 8px; display: flex; justify-content: space-between; gap: 10px; }
+  .step h2 span { color: var(--muted); font-weight: 400; font-size: 0.95rem; white-space: nowrap; }
+  .task { background: var(--soft); border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; }
+  .example { color: var(--muted); font-style: italic; }
+  label { display: block; font-weight: 700; margin: 10px 0 4px; }
+  label small { font-weight: 400; color: var(--muted); }
+  textarea, input { width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  textarea { min-height: 70px; resize: vertical; }
+  textarea:focus, input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .btn { border: 0; border-radius: 8px; padding: 9px 14px; font: inherit; font-weight: 700; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+  .preview { white-space: pre-wrap; background: var(--bg); border: 1px dashed var(--line); border-radius: 8px; padding: 10px 12px; min-height: 60px; font-size: 0.95rem; }
+  .preview.empty { color: var(--muted); font-style: italic; }
+  .note { background: var(--warn-bg); color: var(--warn); border-radius: 8px; padding: 8px 12px; margin-top: 10px; font-size: 0.95rem; }
+  .tip { border-left: 4px solid var(--accent); padding: 4px 0 4px 12px; margin-top: 12px; }
+  .cmp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 640px) { .cmp { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 6px; }
+  td, th { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); }
+  .tablewrap { overflow-x: auto; }
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ok); color: #fff; padding: 8px 16px; border-radius: 20px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  footer { margin-top: 20px; padding-top: 12px; border-top: 2px solid var(--ink); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.95rem; }
+  .saved { color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Warsztat: rozmowa z AI</h1>
+  <p class="sub">Podstawy AI · spotkanie 1 · 30 min · narzędzie: <a href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a>. Wybierz jedną kartę — możesz wziąć własny przedmiot albo własną sprawę.</p>
+
+  <div class="picker" role="group" aria-label="Wybór karty">
+    <button data-card="A" aria-pressed="false"><b>A</b>Kartkówka</button>
+    <button data-card="B" aria-pressed="false"><b>B</b>Sprawdzanie według klucza</button>
+    <button data-card="C" aria-pressed="false"><b>C</b>Pomysł na lekcję</button>
+  </div>
+
+  <div id="card"></div>
+
+  <footer><span>Nie wpisujemy danych uczniów: imion, ocen, opinii, zdrowia.</span><b>AI proponuje, Ty decydujesz.</b></footer>
+</div>
+<div class="toast" id="toast">Skopiowano</div>
+
+<script>
+const MATERIAL_B = `Kartkówka: przyroda, klasa 4 (razem 6 pkt)
+
+1. Lód to woda w stanie: a) ciekłym b) stałym c) gazowym — klucz: b (1 pkt)
+2. Para wodna zamienia się w wodę. To: a) parowanie b) skraplanie c) topnienie — klucz: b (1 pkt)
+3. W południe Słońce w Polsce widać na: a) północy b) wschodzie c) południu — klucz: c (1 pkt)
+4. Woda zamarza w temperaturze: a) 0°C b) 10°C c) 100°C — klucz: a (1 pkt); dwie zaznaczone odpowiedzi = 0 pkt
+5. Wyjaśnij, dlaczego kałuża znika w słoneczny dzień. — klucz: 1 pkt: woda paruje (zamienia się w parę wodną); 1 pkt: bo Słońce ją ogrzewa
+
+Odpowiedzi Ucznia X:
+1. b
+2. a
+3. c
+4. a i c
+5. „Bo woda wsiąka w ziemię i jest ciepło.”`;
+
+const CARDS = {
+  A: {
+    title: "Kartkówka",
+    task: "Przygotuj kartkówkę — 5 pytań + klucz odpowiedzi.",
+    example: "Przykład: ułamki zwykłe, klasa 5. Możesz wziąć swój przedmiot i swoją klasę.",
+    oneLiner: "Zrób kartkówkę z ułamków dla 5 klasy.",
+    hints: {
+      rola: "Kim ma być AI? np. doświadczony nauczyciel matematyki",
+      kontekst: "Klasa, poziom grupy, co już umieją, po co ta kartkówka",
+      zadanie: "Co dokładnie ma powstać? 5 pytań + klucz",
+      format: "Jak ma wyglądać? np. pytania ponumerowane, klucz osobno na końcu",
+      zakres: "Granice: czas pisania, poziom trudności, czego nie chcesz"
+    },
+    tip: "<b>Sprawdź klucz sam:</b> rozwiąż każde z 5 zadań. AI potrafi pewnym tonem podać złą odpowiedź."
+  },
+  B: {
+    title: "Sprawdzanie według klucza",
+    task: "Poproś AI, żeby sprawdziło kartkówkę ucznia według klucza: punkty + krótka informacja zwrotna.",
+    example: "Uczeń X jest zmyślony — prawdziwych prac uczniów do AI nie wpisujemy.",
+    oneLiner: "Sprawdź tę kartkówkę.",
+    material: true,
+    hints: {
+      rola: "Kim ma być AI? np. nauczyciel przyrody, który ocenia sprawiedliwie",
+      kontekst: "Klasa, ile punktów, zasady punktacji (np. dwie odpowiedzi = 0)",
+      zadanie: "Co ma powstać? punkty za każde pytanie, suma, 2 zdania dla ucznia",
+      format: "Np. tabela: pytanie, odpowiedź, punkty, dlaczego",
+      zakres: "Punktuj tylko według klucza, w razie wątpliwości napisz to wprost"
+    },
+    tip: "<b>Sprawdź sam:</b> policz punkty Ucznia X według klucza, zanim spojrzysz na wynik AI. Jak AI potraktowało pytanie 4 i 5? Czy zgadzasz się z jego decyzją?"
+  },
+  C: {
+    title: "Pomysł na lekcję",
+    task: "Poproś o pomysł na lekcję 45 min.",
+    example: "Przykład: wstęp do nowej lektury. Możesz wziąć nowy temat ze swojego przedmiotu.",
+    oneLiner: "Daj mi pomysł na lekcję wprowadzającą do lektury.",
+    hints: {
+      rola: "Kim ma być AI? np. nauczyciel z pomysłem na aktywizujące lekcje",
+      kontekst: "Klasa, tytuł lektury lub temat, co uczniowie już wiedzą, cel lekcji",
+      zadanie: "Co ma powstać? plan lekcji: wstęp, część główna, zakończenie",
+      format: "Np. tabela: etap, czas w minutach, co robią uczniowie",
+      zakres: "45 min, czym dysponujesz w sali, czego unikać (np. bez telefonów)"
+    },
+    tip: "<b>Sprawdź dwie rzeczy:</b> czy minuty sumują się do 45 i czy szczegóły lektury (bohaterowie, wydarzenia) są prawdziwe. AI chętnie zmyśla szczegóły."
+  }
+};
+const PARTS = [["rola","Rola"],["kontekst","Kontekst"],["zadanie","Zadanie"],["format","Format"],["zakres","Zakres"]];
+const STORE = "warsztat-ai-s1";
+
+function load() { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } }
+function save(state) { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+let state = load();
+
+function esc(s) { return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1400);
+}
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); toast("Skopiowano — wklej do Gemini"); }
+  catch (e) {
+    const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy"); ta.remove(); toast("Skopiowano — wklej do Gemini");
+  }
+}
+
+function fullPrompt(id) {
+  const v = state[id] || {};
+  const lines = PARTS.map(([k]) => (v[k] || "").trim()).filter(Boolean);
+  if (CARDS[id].material && v.withMaterial !== false) lines.push("\n" + MATERIAL_B);
+  return lines.join("\n");
+}
+function oneLinerPrompt(id) {
+  const v = state[id] || {};
+  const s = (v.step1 || "").trim();
+  if (!s) return "";
+  return CARDS[id].material ? s + "\n\n" + MATERIAL_B : s;
+}
+
+function field(id, key, label, hint, rows) {
+  const v = (state[id] || {})[key] || "";
+  return `<label for="${id}-${key}">${label}${hint ? ` <small>${esc(hint)}</small>` : ""}</label>
+    <textarea id="${id}-${key}" data-key="${key}" rows="${rows || 2}">${esc(v)}</textarea>`;
+}
+
+function render(id) {
+  const c = CARDS[id];
+  document.querySelectorAll(".picker button").forEach(b => b.setAttribute("aria-pressed", b.dataset.card === id));
+  state.current = id; save(state);
+  const v = state[id] || {};
+  const material = c.material ? `
+    <div class="tablewrap"><table>
+      <tr><th>Kartkówka: przyroda, kl. 4</th><th>Klucz (razem 6 pkt)</th><th>Uczeń X</th></tr>
+      <tr><td>1. Lód to woda w stanie: a) ciekłym b) stałym c) gazowym</td><td>b — 1 pkt</td><td>b</td></tr>
+      <tr><td>2. Para wodna zamienia się w wodę. To: a) parowanie b) skraplanie c) topnienie</td><td>b — 1 pkt</td><td>a</td></tr>
+      <tr><td>3. W południe Słońce w Polsce widać na: a) północy b) wschodzie c) południu</td><td>c — 1 pkt</td><td>c</td></tr>
+      <tr><td>4. Woda zamarza w temperaturze: a) 0°C b) 10°C c) 100°C</td><td>a — 1 pkt; dwie odpowiedzi = 0 pkt</td><td>a i c</td></tr>
+      <tr><td>5. Wyjaśnij, dlaczego kałuża znika w słoneczny dzień.</td><td>1 pkt: woda paruje; 1 pkt: bo Słońce ją ogrzewa</td><td>„Bo woda wsiąka w ziemię i jest ciepło.”</td></tr>
+    </table></div>
+    <p class="example">Nie musisz przepisywać — przyciski „Kopiuj” niżej same dołączają tę kartkówkę do polecenia.</p>` : "";
+
+  document.getElementById("card").innerHTML = `
+    <div class="task"><b>${id} · ${c.title}.</b> ${c.task}<br><span class="example">${c.example}</span>${material}</div>
+
+    <section class="step">
+      <h2>Krok 1 · Jedno zwykłe zdanie <span>5 min</span></h2>
+      <p>Wpisz polecenie tak, jak napisałbyś/napisałabyś je zwykle — jednym zdaniem. <span class="example">np. „${c.oneLiner}”</span></p>
+      ${field(id, "step1", "Moje jedno zdanie", "", 2)}
+      <div class="row">
+        <button class="btn" data-act="copy1">Kopiuj zdanie</button>
+        <a class="btn ghost" href="https://gemini.google.com/app" target="_blank" rel="noopener">Otwórz Gemini ↗</a>
+      </div>
+      ${field(id, "note1", "Co mi się podoba / co nie", "", 3)}
+    </section>
+
+    <section class="step">
+      <h2>Krok 2 · Pełne polecenie <span>12 min</span></h2>
+      <p>Uzupełnij pięć części. Pełne polecenie składa się samo poniżej.</p>
+      ${PARTS.map(([k, l]) => field(id, k, l, c.hints[k], 2)).join("")}
+      ${c.material ? `<label style="font-weight:400"><input type="checkbox" id="${id}-withMaterial" style="width:auto" ${v.withMaterial === false ? "" : "checked"}> dołącz kartkówkę, klucz i odpowiedzi Ucznia X</label>` : ""}
+      <label>Moje pełne polecenie</label>
+      <div class="preview" id="preview"></div>
+      <div class="row">
+        <button class="btn" data-act="copy2">Kopiuj pełne polecenie</button>
+        <a class="btn ghost" href="https://gemini.google.com/app" target="_blank" rel="noopener">Otwórz Gemini ↗</a>
+      </div>
+      <p class="note"><b>Wklej w <u>nowym</u> czacie</b> (w Gemini: „Nowy czat”). Inaczej AI pamięta krok 1 i porównanie nie jest uczciwe.</p>
+    </section>
+
+    <section class="step">
+      <h2>Krok 3 · Porównaj i sprawdź <span>8 min</span></h2>
+      <p>Połóż obok siebie wynik z kroku 1 i z kroku 2.</p>
+      <div class="cmp">
+        <div>${field(id, "bior", "Co biorę", "", 4)}</div>
+        <div>${field(id, "popr", "Co poprawiam", "", 4)}</div>
+        <div>${field(id, "bled", "Co jest błędne", "", 4)}</div>
+      </div>
+      <p class="tip">${c.tip}</p>
+    </section>
+
+    <section class="step">
+      <h2>Szybciej skończone? <span>+5 min</span></h2>
+      <p>Weź drugą kartę albo dopisz do polecenia z kroku 2 jedno zdanie, które poprawi wynik — i sprawdź, co się zmieniło.</p>
+      ${field(id, "extra", "Moje dodatkowe zdanie i co się zmieniło", "", 3)}
+    </section>
+
+    <div class="row">
+      <button class="btn" data-act="download">Pobierz moje notatki (.txt)</button>
+      <button class="btn ghost" data-act="clear">Wyczyść tę kartę</button>
+      <span class="saved">Notatki zapisują się same w tej przeglądarce.</span>
+    </div>`;
+  updatePreview(id);
+}
+
+function updatePreview(id) {
+  const p = document.getElementById("preview");
+  if (!p) return;
+  const txt = fullPrompt(id);
+  const hasParts = PARTS.some(([k]) => ((state[id] || {})[k] || "").trim());
+  p.textContent = hasParts ? txt : "Tu pojawi się Twoje pełne polecenie, gdy uzupełnisz pola wyżej.";
+  p.classList.toggle("empty", !hasParts);
+}
+
+function notesText() {
+  const out = ["Warsztat AI — spotkanie 1 — moje notatki", ""];
+  for (const id of ["A", "B", "C"]) {
+    const v = state[id]; if (!v) continue;
+    const any = Object.entries(v).some(([k, x]) => typeof x === "string" && x.trim());
+    if (!any) continue;
+    out.push(`=== Karta ${id}: ${CARDS[id].title} ===`, "");
+    out.push("Krok 1 — jedno zdanie:", v.step1 || "", "", "Co mi się podoba / co nie:", v.note1 || "", "");
+    out.push("Krok 2 — pełne polecenie:", fullPrompt(id), "");
+    out.push("Krok 3 — co biorę:", v.bior || "", "", "Co poprawiam:", v.popr || "", "", "Co jest błędne:", v.bled || "", "");
+    if (v.extra) out.push("Dodatkowe zdanie:", v.extra, "");
+  }
+  out.push("AI proponuje, Ty decydujesz.");
+  return out.join("\n");
+}
+
+document.querySelector(".picker").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (b) render(b.dataset.card);
+});
+document.getElementById("card").addEventListener("input", e => {
+  const id = state.current; state[id] = state[id] || {};
+  if (e.target.dataset.key) state[id][e.target.dataset.key] = e.target.value;
+  if (e.target.type === "checkbox") state[id].withMaterial = e.target.checked;
+  save(state); updatePreview(id);
+});
+document.getElementById("card").addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const id = state.current;
+  if (b.dataset.act === "copy1") {
+    const t = oneLinerPrompt(id);
+    t ? copy(t) : toast("Najpierw wpisz swoje zdanie");
+  }
+  if (b.dataset.act === "copy2") {
+    const has = PARTS.some(([k]) => ((state[id] || {})[k] || "").trim());
+    has ? copy(fullPrompt(id)) : toast("Najpierw uzupełnij pola");
+  }
+  if (b.dataset.act === "download") {
+    const blob = new Blob([notesText()], { type: "text/plain;charset=utf-8" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "warsztat-ai-notatki.txt"; a.click(); URL.revokeObjectURL(a.href);
+  }
+  if (b.dataset.act === "clear") {
+    if (b.dataset.armed) { delete state[id]; save(state); render(id); toast("Karta wyczyszczona"); }
+    else { b.dataset.armed = "1"; b.textContent = "Na pewno? Kliknij jeszcze raz"; setTimeout(() => { delete b.dataset.armed; b.textContent = "Wyczyść tę kartę"; }, 3000); }
+  }
+});
+
+render(state.current && CARDS[state.current] ? state.current : "A");
+</script>
+</body>
+</html>

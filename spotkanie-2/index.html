@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warsztat AI — spotkanie 2</title>
+<!-- Spotkanie 2: zestawy ćwiczeń w NotebookLM. Jeden plik, bez bibliotek; pliki zestawów leżą obok w zestaw-NN/. Treść zadań = sekcja „Zadanie dla uczestnika” scenariuszy. -->
+<style>
+  /* Kolory i fonty jak ../index.html (slajdy spotkania 1: krem, terakota, Georgia + Arial). Tylko jasny motyw, jak prezentacja. */
+  :root {
+    --bg: #F7F5F0; --card: #FFFFFF; --ink: #1F1E1C; --muted: #6E6A62; --line: #DCD5C8;
+    --accent: #B4532A; --accent-ink: #FFFFFF; --soft: #EFEBE3; --accent-soft: #F5E6DE;
+    --serif: Georgia, "Times New Roman", serif; --sans: Arial, "Helvetica Neue", sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 var(--sans); overflow-wrap: break-word; }
+  a { color: var(--accent); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 16px 64px; }
+  .back { display: inline-block; font-size: 0.9rem; color: var(--muted); margin-bottom: 18px; }
+  .eyebrow { color: var(--accent); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; margin: 0 0 14px; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: 2.6rem; line-height: 1.1; margin: 0 0 6px; }
+  .tagline { font-family: var(--serif); font-style: italic; color: var(--accent); font-size: 1.3rem; margin: 0 0 10px; }
+  .sub { color: var(--muted); margin: 0 0 26px; font-size: 0.95rem; }
+
+  .start { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 18px 22px; margin-bottom: 30px; }
+  .start h2 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; margin: 0 0 10px; }
+  .start ol { margin: 0; padding-left: 1.4em; }
+  .start li { margin-bottom: 10px; }
+  .start li::marker { color: var(--accent); font-weight: 700; }
+  .start .row { margin-top: 6px; }
+  .note { background: var(--accent-soft); border-radius: 6px; padding: 10px 14px; margin: 14px 0 0; font-size: 0.95rem; }
+
+  .navgroup { margin-bottom: 18px; }
+  .navgroup h3 { font-family: var(--sans); font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin: 0 0 2px; }
+  .gdesc { margin: 0 0 8px; color: var(--muted); font-size: 0.92rem; }
+  .picker { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .pick { display: block; text-decoration: none; color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .pick:hover, .pick:focus { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); outline: none; }
+  .pick b { display: block; font-family: var(--serif); font-weight: 400; font-size: 2.2rem; line-height: 1; margin-bottom: 6px; color: var(--accent); }
+  .pick .pt { display: block; font-weight: 700; line-height: 1.3; }
+  .pick .pw { display: block; color: var(--muted); font-size: 0.88rem; margin-top: 6px; line-height: 1.35; }
+
+  h2.group { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; margin: 44px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); scroll-margin-top: 12px; }
+  section.set { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin-bottom: 22px; scroll-margin-top: 12px; }
+  .kicker { color: var(--accent); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 6px; }
+  section.set h2 { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; line-height: 1.2; margin: 0 0 14px; }
+  section.set h2 b { font-weight: 400; color: var(--accent); margin-right: 12px; }
+  .task { background: var(--soft); border-left: 4px solid var(--accent); border-radius: 4px; padding: 12px 16px; margin-bottom: 14px; }
+  .task > b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; }
+
+  .box { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 14px 0; }
+  .box h3 { font-family: var(--serif); font-weight: 400; font-size: 1.2rem; margin: 0 0 8px; }
+  .box h3 span { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
+  .files, .links { list-style: none; margin: 0; padding: 0; }
+  .files li { margin-bottom: 6px; }
+  .file { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; background: var(--card); border: 1.5px solid var(--line); border-radius: 6px; padding: 9px 12px; text-decoration: none; color: var(--ink); }
+  .file:hover, .file:focus { border-color: var(--accent); }
+  .file .fname { color: var(--accent); font-weight: 700; word-break: break-all; }
+  .file .fname::before { content: "⬇ "; }
+  .file .fmeta { color: var(--muted); font-size: 0.88rem; white-space: nowrap; }
+  .links li { margin-bottom: 10px; }
+  .lab { display: block; font-size: 0.92rem; margin-bottom: 3px; }
+  .urlrow { display: flex; gap: 8px; align-items: center; }
+  code.url { flex: 1; min-width: 0; display: block; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; font-size: 0.85rem; word-break: break-all; }
+  .hint { color: var(--muted); font-size: 0.9rem; margin: 8px 0 0; }
+
+  h3.steps-h { font-family: var(--serif); font-weight: 400; font-size: 1.3rem; margin: 20px 0 6px; }
+  ol.steps { margin: 0; padding-left: 1.6em; }
+  ol.steps > li { margin-bottom: 16px; padding-left: 4px; }
+  ol.steps > li::marker { color: var(--accent); font-weight: 700; font-size: 1.05rem; }
+  ol.steps p { margin: 0 0 8px; }
+  ol.steps ul { margin: 4px 0 8px; padding-left: 1.2em; }
+  ol.steps ul li { margin-bottom: 4px; }
+  p.then { border-left: 3px solid var(--accent); padding: 2px 0 2px 10px; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; background: var(--soft); border-radius: 4px; padding: 1px 5px; }
+  .prompt { margin: 6px 0 10px; }
+  .prompt pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 0.97rem/1.5 var(--sans); background: var(--bg); border: 1px dashed var(--accent); border-radius: 6px; padding: 10px 12px; }
+  .prompt .btn { margin-top: 6px; }
+  .inl code { font-family: var(--sans); font-size: 0.95em; background: var(--accent-soft); padding: 1px 6px; }
+  .copy-mini { font: inherit; font-size: 0.78rem; font-weight: 700; color: var(--accent); background: transparent; border: 1.5px solid var(--accent); border-radius: 5px; padding: 0 6px; margin-left: 5px; cursor: pointer; vertical-align: 1px; }
+
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+  .btn { border: 0; border-radius: 6px; padding: 10px 16px; font: inherit; font-weight: 700; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; }
+  .btn.small { padding: 6px 14px; font-size: 0.92rem; }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+  .btn.done, .copy-mini.done { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  details.extra { margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 0 14px; background: var(--bg); }
+  details.extra > summary { cursor: pointer; padding: 12px 0; font-family: var(--serif); font-size: 1.2rem; list-style-position: inside; }
+  details.extra > summary span { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
+  details.extra[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+  .foot { justify-content: space-between; margin-top: 16px; }
+  .up { font-size: 0.92rem; }
+
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 18px; border-radius: 20px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); text-align: center; }
+  .toast.show { opacity: 1; }
+  footer { margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.95rem; color: var(--muted); }
+  footer b { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent); font-size: 1.1rem; }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 2rem; }
+    section.set { padding: 16px 14px; }
+    section.set h2 { font-size: 1.35rem; }
+    .picker { grid-template-columns: 1fr; }
+    .pick b { display: inline; margin-right: 8px; font-size: 1.8rem; }
+    .pick .pt { display: inline; }
+    .urlrow { flex-direction: column; align-items: stretch; }
+    .urlrow .btn { align-self: flex-start; }
+    ol.steps { padding-left: 1.3em; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../">← Spotkanie 1: Rozmowa z AI</a>
+  <p class="eyebrow">Warsztat · spotkanie 2 · NotebookLM</p>
+  <h1>Praca na własnych źródłach</h1>
+  <p class="tagline">Jakość źródeł = jakość odpowiedzi</p>
+  <p class="sub">Podstawy AI dla nauczycieli · SP4 Bolesławiec · 26 października 2026 · narzędzie: <a href="https://notebooklm.google.com" target="_blank" rel="noopener">NotebookLM</a></p>
+
+  <div class="start">
+    <h2>Zacznij tutaj</h2>
+    <ol>
+      <li>Otwórz NotebookLM: <b>notebooklm.google.com</b>
+        <div class="row"><a class="btn small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a></div></li>
+      <li>Zaloguj się swoim kontem Google. Nie masz konta? Załóż je na swoim obecnym adresie e-mail: <a href="https://accounts.google.com/signup" target="_blank" rel="noopener">accounts.google.com/signup</a>. Komunikat „adres jest już używany” znaczy, że konto już masz — wtedy po prostu się zaloguj.</li>
+      <li><b>Razem na start: zestaw 06.</b> Robimy go wspólnie, prowadzący pokazuje każdy krok na dużym ekranie. <a href="#zestaw-06">Przejdź do zestawu 06 ↓</a></li>
+      <li>Potem wybierz <b>jeden</b> zestaw z listy niżej i zrób go sam(a) — 15 minut. W każdym zestawie: pobierz pliki, dodaj linki, a potem idź po kolei krokami.</li>
+      <li>Przycisk <b>„Kopiuj”</b> kopiuje polecenie. W NotebookLM kliknij w pole i wklej (Ctrl+V).</li>
+    </ol>
+    <p class="note">Do NotebookLM nie wgrywamy dokumentów z danymi uczniów ani rodziców. Pliki w zestawach to dokumenty publiczne albo materiał przygotowany na szkolenie. Na koniec zajęć wyloguj się z konta Google na szkolnym komputerze.</p>
+  </div>
+
+  <div id="zestawy">
+<div class="navgroup"><h3>Razem na start</h3><p class="gdesc">Robimy go wspólnie — prowadzący pokazuje każdy krok na dużym ekranie.</p><div class="picker"><a class="pick" href="#zestaw-06"><b>06</b><span class="pt">Procedury bezpieczeństwa SP4 — co robię, gdy…</span><span class="pw">Wynik: quiz dla nowego nauczyciela SP4 — 8 pytań o codzienne sytuacje.</span></a></div></div>
+<div class="navgroup"><h3>Na pierwszy raz</h3><p class="gdesc">Wybierz jeden zestaw — ten, który najbardziej przypomina Twoją pracę.</p><div class="picker"><a class="pick" href="#zestaw-01"><b>01</b><span class="pt">Wycieczka klas 5 do Energylandii — zgody, koszty i wiadomość do rodziców</span><span class="pw">Wynik: wiadomość do rodziców o wycieczce (najwyżej 250 słów) z poprawnym kosztem na ucznia.</span></a><a class="pick" href="#zestaw-02"><b>02</b><span class="pt">Lekcja w klasie 2 — jak jeż przygotowuje się do zimy</span><span class="pw">Wynik: quiz (kafelek „Test”) dla klasy 2 — 8 krótkich pytań o to, jak jeż przygotowuje się do zimy.</span></a><a class="pick" href="#zestaw-04"><b>04</b><span class="pt">Dzieci w sieci — szybkie przygotowanie do zebrania lub godziny wychowawczej</span><span class="pw">Wynik: 15 fiszek z raportu NASK i rad FDDS do powtórki przed zebraniem — z 3 liczbami sprawdzonymi w przypisach.</span></a><a class="pick" href="#zestaw-09"><b>09</b><span class="pt">Telefony w szkole — przygotowanie do zebrania z rodzicami</span><span class="pw">Wynik: prezentacja na zebranie z rodzicami klasy 6 (7 slajdów), w której każda „zasada SP4” jest sprawdzona w czacie.</span></a></div></div>
+<div class="navgroup"><h3>Dla chętnych</h3><p class="gdesc">Gdy skończysz wcześniej albo masz ochotę na coś trudniejszego.</p><div class="picker"><a class="pick" href="#zestaw-03"><b>03</b><span class="pt">11 Listopada — infografika na gazetkę i krótki film na apel</span><span class="pw">Wynik: infografika na gazetkę „Droga do Niepodległej — listopad 1918”, z każdą datą sprawdzoną w przypisach.</span></a><a class="pick" href="#zestaw-08"><b>08</b><span class="pt">Indywidualny tok nauki — odpowiedź dla rodzica</span><span class="pw">Wynik: odpowiedź na mail rodzica (najwyżej 250 słów), sprawdzona w przypisach — gotowa do poprawienia i wysłania.</span></a></div></div>
+  </div>
+
+<h2 class="group" id="grupa-start">Razem na start</h2>
+
+<section class="set" id="zestaw-06">
+  <p class="kicker">Wspólny start · 15 min</p>
+  <h2><b>06</b>Procedury bezpieczeństwa SP4 — co robię, gdy…</h2>
+  <div class="task"><b>Twój wynik:</b> quiz dla nowego nauczyciela SP4 — 8 pytań o codzienne sytuacje.</div>
+  <p>Robimy to razem, krok po kroku — prowadzący pokazuje na dużym ekranie. W Studio kliknięcie kafelka niczego jeszcze nie generuje: otwiera okno z ustawieniami, a generowanie rusza dopiero po <strong>„Wygeneruj teraz”</strong>.</p>
+  <div class="box"><h3>Pliki do pobrania <span>2 pliki</span></h3><ul class="files"><li><a class="file" href="zestaw-06/01-bezpieczenstwo-w-szkole-procedury-2024.pdf" download><span class="fname">01-bezpieczenstwo-w-szkole-procedury-2024.pdf</span><span class="fmeta">PDF · 789 KB</span></a></li><li><a class="file" href="zestaw-06/02-procedura-kontroli-wejsc-i-wyjsc.pdf" download><span class="fname">02-procedura-kontroli-wejsc-i-wyjsc.pdf</span><span class="fmeta">PDF · 81 KB</span></a></li></ul><p class="hint">Kliknij każdy plik — zapisze się zwykle w folderze „Pobrane”. Potem w NotebookLM: „Dodaj źródła” → „Prześlij pliki”.</p></div>
+  
+  <h3 class="steps-h">Krok po kroku</h3>
+  <ol class="steps" start="1"><li value="1"><p>Nowy notatnik → nazwa „Procedury SP4” → <strong>Dodaj źródła</strong> → <strong>Prześlij pliki</strong> → oba pliki PDF.</p></li><li value="2"><p>Zapytaj w czacie (skopiuj):</p>
+<div class="prompt"><pre id="z06-p1">Uczeń przewrócił się na przerwie na korytarzu i mówi, że boli go ręka. Co robię krok po kroku jako nauczyciel?</pre><button type="button" class="btn small" data-copy="z06-p1">Kopiuj</button></div>
+<p class="then">→ <strong>Sprawdź:</strong> kliknij po kolei numery przypisów i przy każdym przeczytaj podświetlony fragment. O jakiej sytuacji on mówi? Znajdź co najmniej jeden fragment o <strong>innej</strong> sytuacji (np. złe samopoczucie ucznia, obowiązki dyrektora w sytuacji kryzysowej). Jeśli go znajdziesz, AI złożyło odpowiedź z kawałków różnych procedur.</p></li><li value="3"><p>Zapytaj (skopiuj):</p>
+<div class="prompt"><pre id="z06-p2">Na korytarzu widzę dorosłą osobę, której nie znam. Kto może wejść do budynku szkoły, jak szkoła sprawdza obcą osobę i co mam zrobić ja?</pre><button type="button" class="btn small" data-copy="z06-p2">Kopiuj</button></div>
+<p class="then">→ <strong>Sprawdź:</strong> znajdź w odpowiedzi zdanie o tym, co masz zrobić <strong>Ty</strong>. Kliknij jego przypis i przeczytaj fragment słowo po słowie: czy potwierdza <strong>całe</strong> zdanie, czy tylko jego część? To, czego we fragmencie nie ma, dopisało AI. <strong>Przypis jest, ale nie potwierdza całego zdania.</strong></p></li><li value="4"><p>Zapytaj o coś, czego w dokumentach nie ma (skopiuj):</p>
+<div class="prompt"><pre id="z06-p3">Przy jakiej temperaturze w sali lekcyjnej skracamy lekcje w czasie upału?</pre><button type="button" class="btn small" data-copy="z06-p3">Kopiuj</button></div>
+<p class="then">→ oczekiwana odpowiedź: w źródłach nie ma takiej informacji. <strong>Jeśli AI zaproponuje „wyszukiwanie w sieci” albo „wyszukaj w internecie” — nie klikaj.</strong> Wtedy odpowiedź przestaje pochodzić z dokumentów szkoły. Nie używaj też pola „Wyszukaj nowe źródła w internecie” w panelu źródeł. Jeśli AI podało jakąś liczbę — kliknij przypis i sprawdź, skąd ją wzięło.</p></li><li value="5"><p>Studio → kliknij kafelek <strong>Mapa myśli</strong> → otworzy się okno: język „polski”, w polu <strong>„Jaki ma być temat?”</strong> wpisz: <span class="inl"><code id="z06-i4">Po polsku. Tylko sytuacje codzienne: ewakuacja, wejścia do szkoły, nieobecności i zwolnienia, telefony, ucieczka ucznia ze szkoły.</code><button type="button" class="copy-mini" data-copy="z06-i4">Kopiuj</button></span> → <strong>Wygeneruj teraz</strong>. Otwórz mapę → kliknij gałąź o ewakuacji → NotebookLM sam zada pytanie w czacie i odpowie z przypisami.</p></li><li value="6"><p>Studio → kliknij kafelek <strong>Test</strong> (okno nazywa się „Quiz”): <strong>Liczba pytań</strong> — „Mniej”, <strong>Poziom trudności</strong> — „Średni (domyślny)”; w polu <strong>„Jaki ma być temat?”</strong> wpisz:</p>
+<div class="prompt"><pre id="z06-p5">Quiz po polsku dla nowego nauczyciela SP4, 8 pytań jednokrotnego wyboru. Tylko codzienne sytuacje: ewakuacja (sygnał alarmu, co robi nauczyciel), obca osoba w budynku, zwolnienie ucznia z lekcji, telefon na lekcji, uczeń oddalił się ze szkoły, złe samopoczucie ucznia. Pomiń procedury dotyczące śmierci, prób samobójczych, napastników i bomb. Przy każdej odpowiedzi krótko wyjaśnij, dlaczego jest poprawna.</pre><button type="button" class="btn small" data-copy="z06-p5">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> → policz pytania (ma być 8) i rozwiąż 2–3 z nich. Cały quiz możesz dokończyć po zajęciach.</p></li></ol>
+  <details class="extra"><summary>Jeśli zostanie czas <span>krok 7</span></summary><ol class="steps" start="7"><li value="7"><p>Sprawdź quiz (AI proponuje, Ty decydujesz): wybierz jedno pytanie i zapytaj w czacie <span class="inl"><code id="z06-i6">Z którego fragmentu procedur pochodzi pytanie o …?</code><button type="button" class="copy-mini" data-copy="z06-i6">Kopiuj</button></span> → kliknij przypis. Czy dałbyś ten quiz nowemu koledze bez zmian? Co poprawić?</p></li></ol></details>
+  <div class="row foot"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a><a class="up" href="#zestawy">↑ Lista zestawów</a></div>
+</section>
+<h2 class="group" id="grupa-pierwszy">Na pierwszy raz</h2>
+
+<section class="set" id="zestaw-01">
+  <p class="kicker">Na pierwszy raz · 15 min</p>
+  <h2><b>01</b>Wycieczka klas 5 do Energylandii — zgody, koszty i wiadomość do rodziców</h2>
+  <div class="task"><b>Twój wynik:</b> wiadomość do rodziców o wycieczce (najwyżej 250 słów) z poprawnym kosztem na ucznia.</div>
+  <p>Sytuacja: wychowawca klasy 5a jest kierownikiem wycieczki do Energylandii (4 czerwca 2027). Za miesiąc zebranie z rodzicami. Pod ręką: regulamin szkoły, regulamin parku, program i roboczy kosztorys. Do zrobienia: policzyć koszt na ucznia i napisać wiadomość do rodziców.</p>
+<p>W Studio kliknięcie kafelka niczego jeszcze nie generuje: otwiera okno „Dostosuj…” albo listę formatów, a generowanie rusza dopiero po <strong>„Wygeneruj teraz”</strong>.</p>
+  <div class="box"><h3>Pliki do pobrania <span>4 pliki</span></h3><ul class="files"><li><a class="file" href="zestaw-01/01-regulamin-wycieczek-sp4.pdf" download><span class="fname">01-regulamin-wycieczek-sp4.pdf</span><span class="fmeta">PDF · 292 KB</span></a></li><li><a class="file" href="zestaw-01/02-regulamin-parku-energylandia.pdf" download><span class="fname">02-regulamin-parku-energylandia.pdf</span><span class="fmeta">PDF · 303 KB</span></a></li><li><a class="file" href="zestaw-01/03-program-wycieczki-kl5.docx" download><span class="fname">03-program-wycieczki-kl5.docx</span><span class="fmeta">Word (DOCX) · 6 KB</span></a></li><li><a class="file" href="zestaw-01/04-kosztorys-wycieczki.docx" download><span class="fname">04-kosztorys-wycieczki.docx</span><span class="fmeta">Word (DOCX) · 5 KB</span></a></li></ul><p class="hint">Kliknij każdy plik — zapisze się zwykle w folderze „Pobrane”. Potem w NotebookLM: „Dodaj źródła” → „Prześlij pliki”.</p></div>
+  
+  <h3 class="steps-h">Krok po kroku</h3>
+  <ol class="steps" start="1"><li value="1"><p><strong>Nowy notatnik</strong> → nazwij go „Wycieczka 5a/5b — Energylandia” → <strong>Dodaj źródła</strong> → <strong>Prześlij pliki</strong> → 4 pliki (2 PDF i 2 DOCX). Poczekaj, aż wszystkie źródła się wczytają.<br>Jeśli odpowiedzi wychodzą po angielsku: ustawienia notatnika → język odpowiedzi → polski.</p></li><li value="2"><p><strong>Najpierw uruchom wiadomość</strong> (liczy się ok. 3 min — w tym czasie pracuj w czacie): Studio → kafelek <strong>„Raporty”</strong> → format <strong>„Dokument”</strong> (w domyślnym „Interaktywny” jest tylko szablon „Omówienie nauki”) → szablon <strong>„Utwórz własny”</strong>, w polu opisu wpisz:</p>
+<div class="prompt"><pre id="z01-p1">Wiadomość do rodziców uczniów klas 5a i 5b do wysłania przez e-dziennik: wycieczka do Energylandii 4 czerwca 2027. Najwyżej 250 słów. Język prosty i życzliwy. Zawrzyj: datę i godziny zbiórki i powrotu, kto odbiera dziecko po powrocie, koszt na ucznia i terminy wpłat (z zadatkiem), jakie dokumenty podpisać i do kiedy, co zabrać. Na końcu krótka lista „Do zrobienia dla rodzica” z datami. Nie dopisuj niczego, czego nie ma w źródłach. Tam, gdzie brakuje danych, wpisz [DO UZUPEŁNIENIA].</pre><button type="button" class="btn small" data-copy="z01-p1">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>.</p></li><li value="3"><p><strong>Policz koszt w czacie</strong> (skopiuj):</p>
+<div class="prompt"><pre id="z01-p2">Policz koszt wycieczki na jednego ucznia według zasad regulaminu wycieczek SP4 (§9 pkt 2) i danych z kosztorysu. Zrób tabelę: pozycja | kwota razem. Na końcu podaj sumę i koszt na jednego ucznia. Potem porównaj swój wynik z kosztem na osobę podanym w kosztorysie. Czy kwoty się zgadzają? Jeśli nie — skąd bierze się różnica?</pre><button type="button" class="btn small" data-copy="z01-p2">Kopiuj</button></div>
+<p class="then">→ <strong>Sprawdź sam:</strong></p>
+<ul><li>Zapisz dwie kwoty: koszt na ucznia z czatu i koszt na osobę z kosztorysu (plik 04).</li><li>Kliknij przypis przy §9 pkt 2 i przeczytaj fragment: kto według regulaminu nie płaci za siebie?</li><li>Policz kalkulatorem w telefonie: suma z kosztorysu podzielona przez liczbę <strong>uczniów</strong> (46). Która kwota jest dobra — z kosztorysu czy z czatu?</li></ul></li><li value="4"><p><strong>Zapytaj w czacie</strong> (skopiuj):</p>
+<div class="prompt"><pre id="z01-p3">Czy regulamin parku podaje, od jakiego wzrostu dziecko może korzystać z poszczególnych atrakcji? Co regulamin mówi o opiece nad dziećmi poniżej 13 lat i o tym, w czym chodzić po parku?</pre><button type="button" class="btn small" data-copy="z01-p3">Kopiuj</button></div>
+<p class="then">→ <strong>Sprawdź:</strong> przy każdej liczbie centymetrów kliknij przypis. Czy ta liczba naprawdę jest w podświetlonym fragmencie regulaminu? Liczba z przypisem, który ją potwierdza, jest w porządku. Liczba bez takiego przypisu jest wymyślona. Jeśli czegoś w źródłach nie ma, dobra odpowiedź brzmi „źródła tego nie podają”.</p></li><li value="5"><p><strong>Sprawdź wiadomość, zanim cokolwiek wyślesz</strong> (otwórz ją w Studio):</p>
+<ul><li>Jaka kwota na ucznia jest w wiadomości? Jeśli inna niż dobra kwota z kroku 3, to AI wzięło ją z kosztorysu. Popraw ręcznie kwotę i raty.</li><li>Czy jest zasada, że po powrocie (ok. 21:45) dziecko odbiera rodzic? Wiadomość nie ma klikalnych przypisów, więc zapytaj w czacie: <span class="inl"><code id="z01-i4">Skąd jest zasada, że po powrocie dziecko odbiera rodzic? Podaj paragraf.</code><button type="button" class="copy-mini" data-copy="z01-i4">Kopiuj</button></span> → kliknij przypis.</li><li>Gdzie stoi [DO UZUPEŁNIENIA]? Czy nie ma czegoś spoza źródeł (np. cen spoza kosztorysu, numeru konta, wzrostu na atrakcje)?</li><li>Czy mieści się w 250 słowach?</li><li><strong>AI proponuje, Ty decydujesz</strong> — pod wiadomością podpisuje się nauczyciel, nie NotebookLM.</li></ul></li></ol>
+  <details class="extra"><summary>Jeśli zostanie czas <span>kroki 6–8</span></summary><ol class="steps" start="6"><li value="6"><p><strong>Zgody i opiekunowie</strong> (skopiuj do czatu):</p>
+<div class="prompt"><pre id="z01-p5">Jakie zgody i dokumenty od rodziców są potrzebne do wycieczki według regulaminu wycieczek SP4? Ilu opiekunów potrzebujemy na 46 uczniów przy wyjeździe autokarem poza Bolesławiec? Podaj numery paragrafów.</pre><button type="button" class="btn small" data-copy="z01-p5">Kopiuj</button></div>
+<p class="then">→ kliknij przypis przy liczbie opiekunów. Policz sam: 46 uczniów, 1 opiekun na 15 — ile wychodzi?</p></li><li value="7"><p><strong>Prezentacja na zebranie</strong> (generuje się kilka minut): Studio → kafelek <strong>„Prezentacja”</strong> (okno „Dostosuj prezentację”; format i długość zostaw domyślne), w polu opisu wpisz:</p>
+<div class="prompt"><pre id="z01-p6">Prezentacja na zebranie z rodzicami klas 5a i 5b (19 listopada 2026), 6–8 slajdów, po polsku. Kolejno: cel i program dnia, bezpieczeństwo i opiekunowie, najważniejsze zasady parku, koszt na ucznia i terminy wpłat, dokumenty do podpisania, co zabrać. Mało tekstu na slajdzie, duże daty i kwoty. Korzystaj tylko z informacji ze źródeł.</pre><button type="button" class="btn small" data-copy="z01-p6">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Gdy będzie gotowa: czy kwota na slajdzie jest ta sama co dobra kwota z kroku 3?</p></li><li value="8"><p><strong>Popraw polecenie: dopisz »Tylko informacje ze źródeł. Czego brak, oznacz [BRAK W ŹRÓDŁACH]« i wygeneruj jeszcze raz — co się zmieniło?</strong> Studio → „Raporty” → „Dokument” → „Utwórz własny” → wklej polecenie z kroku 2 i dopisz na końcu:</p>
+<div class="prompt"><pre id="z01-p7">Tylko informacje ze źródeł. Czego brak, oznacz [BRAK W ŹRÓDŁACH].</pre><button type="button" class="btn small" data-copy="z01-p7">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> → porównaj obie wiadomości (przed i po). Czy pojawiły się znaczniki? Czy coś zniknęło? Czy zmieniła się kwota na ucznia?</p></li></ol></details>
+  <div class="row foot"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a><a class="up" href="#zestawy">↑ Lista zestawów</a></div>
+</section>
+
+<section class="set" id="zestaw-02">
+  <p class="kicker">Na pierwszy raz · 15 min</p>
+  <h2><b>02</b>Lekcja w klasie 2 — jak jeż przygotowuje się do zimy</h2>
+  <div class="task"><b>Twój wynik:</b> quiz (kafelek „Test”) dla klasy 2 — 8 krótkich pytań o to, jak jeż przygotowuje się do zimy.</div>
+  <p>Przygotowują Państwo materiały na lekcję „Jak jeż przygotowuje się do zimy?” w klasie 2. Notatki do lekcji już są — brakuje quizu. W Studio kliknięcie kafelka niczego jeszcze nie generuje: otwiera okno „Dostosuj…”, a generowanie rusza dopiero po <strong>„Wygeneruj teraz”</strong>.</p>
+  <div class="box"><h3>Pliki do pobrania <span>1 plik</span></h3><ul class="files"><li><a class="file" href="zestaw-02/01-moje-notatki-do-lekcji-jez.docx" download><span class="fname">01-moje-notatki-do-lekcji-jez.docx</span><span class="fmeta">Word (DOCX) · 6 KB</span></a></li></ul><p class="hint">Kliknij każdy plik — zapisze się zwykle w folderze „Pobrane”. Potem w NotebookLM: „Dodaj źródła” → „Prześlij pliki”.</p></div>
+  <div class="box"><h3>Linki do wklejenia <span>„Dodaj źródła” → „Witryny”</span></h3><ul class="links"><li><span class="lab">Link 02 · wroclaw.pl — artykuł „Jeż w ogrodzie to skarb”</span><span class="urlrow"><code class="url" id="z02-l1">https://www.wroclaw.pl/zielony-wroclaw/jez-w-ogrodzie-co-robic-aby-przezyl-zime</code><button type="button" class="btn small" data-copy="z02-l1">Kopiuj</button></span></li><li><span class="lab">Link 03 · Demagog — artykuł „Demagog rujnuje jesienne faktoidy: żółte liście i jeż z jabłkiem”</span><span class="urlrow"><code class="url" id="z02-l2">https://demagog.org.pl/analizy_i_raporty/demagog-rujnuje-jesienne-faktoidy-zolte-liscie-i-jez-z-jablkiem/</code><button type="button" class="btn small" data-copy="z02-l2">Kopiuj</button></span></li><li><span class="lab">Link 04 · film YouTube — „Uwaga jeże! Jak im pomóc przed zimą?” (Wrocław TV, 1:37)</span><span class="urlrow"><code class="url" id="z02-l3">https://www.youtube.com/watch?v=dPCAM5M9VaA</code><button type="button" class="btn small" data-copy="z02-l3">Kopiuj</button></span></li></ul><div class="row"><span hidden id="z02-g4">https://www.wroclaw.pl/zielony-wroclaw/jez-w-ogrodzie-co-robic-aby-przezyl-zime https://demagog.org.pl/analizy_i_raporty/demagog-rujnuje-jesienne-faktoidy-zolte-liscie-i-jez-z-jablkiem/ https://www.youtube.com/watch?v=dPCAM5M9VaA</span><button type="button" class="btn ghost small" data-copy="z02-g4">Kopiuj 3 adresy naraz</button></div><p class="hint">Kilka adresów wklejasz w jedno pole „Adresy URL witryn i YouTube”, oddzielone spacją.</p></div>
+  <h3 class="steps-h">Krok po kroku</h3>
+  <ol class="steps" start="1"><li value="1"><p><strong>Nowy notatnik</strong> → nazwa „Jeż — klasa 2” → dodaj źródła:</p>
+<ul><li><strong>Dodaj źródła</strong> → <strong>Prześlij pliki</strong> → plik <code>01-moje-notatki-do-lekcji-jez.docx</code>,</li><li><strong>Dodaj źródła</strong> → <strong>Witryny</strong> → wklej link 02 (wroclaw.pl), link 03 (Demagog) i link 04 (film YouTube) — w jednym polu „Adresy URL witryn i YouTube”, oddzielone spacją → <strong>Wstaw</strong>.</li></ul>
+<p>Na liście źródeł powinny być 4 pozycje. Kliknij nazwę filmu — widać jego tekst (transkrypcję). Tylko tyle AI „widzi” z filmu.</p></li><li value="2"><p><strong>Czat — test notatek</strong> (skopiuj):</p>
+<div class="prompt"><pre id="z02-p5">Czy jeż zbiera jabłka na kolcach i zanosi je do kryjówki? Napisz, co mówi o tym każde źródło osobno.</pre><button type="button" class="btn small" data-copy="z02-p5">Kopiuj</button></div>
+<p class="then">→ <strong>Sprawdź:</strong> kliknij przypis przy Państwa notatkach i przypis przy artykule Demagogu. Które źródło mówi „tak”, a które „to mit”? Państwa notatki też są źródłem — AI wierzy im tak samo jak artykułom. Dlatego przed quizem <strong>odznacz źródło 01 (notatki)</strong> w panelu źródeł (kwadracik przy nazwie). Poziom klasy i tak wpiszesz w okno quizu.</p></li><li value="3"><p>Studio → kliknij kafelek <strong>Test</strong> (okno nazywa się „Quiz”): <strong>Liczba pytań</strong> — „Mniej”, <strong>Poziom trudności</strong> — „Łatwy”; w polu <strong>„Jaki ma być temat?”</strong> wpisz:</p>
+<div class="prompt"><pre id="z02-p6">Quiz dla uczniów klasy 2 szkoły podstawowej (7–8 lat), po polsku. Dokładnie 8 pytań, każde do 10 słów, proste słowa. Tematy: co je jeż, gdzie śpi zimą, dlaczego jesienią dużo je, jak możemy mu pomóc. Jedna poprawna odpowiedź. Bez słowa „hibernacja”.</pre><button type="button" class="btn small" data-copy="z02-p6">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> (ok. 1 min).</p></li><li value="4"><p><strong>Sprawdź quiz — AI proponuje, Ty decydujesz:</strong></p>
+<ul><li>Policz pytania — czy jest 8? Czy dziecko z klasy 2 je przeczyta?</li><li>Czy jabłka albo mleko są gdzieś <strong>dobrą</strong> odpowiedzią? (Jako zła odpowiedź — do Twojej decyzji.)</li><li>Znajdź pytanie ze słowem „na pewno”, „zawsze” albo „nigdy” i zapytaj w czacie: <span class="inl"><code id="z02-i7">Skąd wiadomo, że …? Podaj źródło.</code><button type="button" class="copy-mini" data-copy="z02-i7">Kopiuj</button></span> → kliknij przypis. Czy źródło mówi to tak samo mocno?</li><li>Zdecyduj: co poprawisz ręcznie, a co wygenerujesz jeszcze raz z innym poleceniem.</li></ul></li></ol>
+  <details class="extra"><summary>Jeśli zostanie czas <span>kroki 5–7</span></summary><ol class="steps" start="5"><li value="5"><p><strong>Infografika do sali</strong> (ok. 1,5 min): Studio → kafelek <strong>Infografika</strong> → okno „Dostosuj infografikę”: <strong>Wybierz orientację</strong> — „Pionowo”, <strong>Poziom szczegółów</strong> — „Zwięzłe”; w polu <strong>„Opisz infografikę, którą chcesz utworzyć”</strong> wpisz:</p>
+<div class="prompt"><pre id="z02-p8">Infografika do powieszenia w sali klasy 2, po polsku. Tytuł: „Jak jeż przygotowuje się do zimy?”. 4 kroki z obrazkami: 1. Dużo je. 2. Szuka kryjówki z liści. 3. Zwija się w kulkę i śpi. 4. Budzi się wiosną. Na dole: „Jak możemy pomóc?” i 3 krótkie rady. Mało tekstu, duże litery.</pre><button type="button" class="btn small" data-copy="z02-p8">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Sprawdź: czy „jeż” ma poprawne „ż”? Czy żaden obrazek nie pokazuje jeża z jabłkiem?</p></li><li value="6"><p><strong>Prezentacja na tablicę</strong> (ok. 3,5 min): Studio → kafelek <strong>Prezentacja</strong> → okno „Dostosuj prezentację”; w polu <strong>„Opisz prezentację, którą chcesz utworzyć”</strong> wpisz:</p>
+<div class="prompt"><pre id="z02-p9">Krótka prezentacja na tablicę interaktywną dla klasy 2 szkoły podstawowej (dzieci 7–8 lat), po polsku. 6 slajdów: 1) Kto to jest jeż? 2) Co je jeż? 3) Jesienią jeż dużo je. 4) Jeż szuka kryjówki z liści. 5) Sen zimowy. 6) Jak możemy pomóc jeżowi? Na każdym slajdzie jedno krótkie zdanie (do 8 słów) i duży obrazek. Bez słowa „hibernacja”.</pre><button type="button" class="btn small" data-copy="z02-p9">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Sprawdź: czy na slajdzie jest naprawdę jedno krótkie zdanie?</p></li><li value="7"><p><strong>Quiz dla ucznia, który czyta sylabami</strong> — w czacie: <span class="inl"><code id="z02-i10">Przerób quiz dla ucznia, który czyta sylabami: 5 pytań, 3 odpowiedzi do wyboru, bardzo krótkie zdania.</code><button type="button" class="copy-mini" data-copy="z02-i10">Kopiuj</button></span> Czy AI wzięło pod uwagę, czego ten uczeń potrzebuje? (Opis ucznia jest w notatkach — zaznacz je z powrotem.)</p></li></ol></details>
+  <div class="row foot"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a><a class="up" href="#zestawy">↑ Lista zestawów</a></div>
+</section>
+
+<section class="set" id="zestaw-04">
+  <p class="kicker">Na pierwszy raz · 15 min</p>
+  <h2><b>04</b>Dzieci w sieci — szybkie przygotowanie do zebrania lub godziny wychowawczej</h2>
+  <div class="task"><b>Twój wynik:</b> 15 fiszek z raportu NASK i rad FDDS do powtórki przed zebraniem — z 3 liczbami sprawdzonymi w przypisach.</div>
+  <p>Za tydzień mają Państwo zebranie z rodzicami (albo godzinę wychowawczą) o dzieciach w internecie. Jest świeży raport NASK — 172 strony, nie ma kiedy go przeczytać. W Studio kliknięcie kafelka niczego jeszcze nie generuje: otwiera okno „Dostosuj…”, a generowanie rusza dopiero po <strong>„Wygeneruj teraz”</strong>.</p>
+  <div class="box"><h3>Pliki do pobrania</h3><p class="hint">Nic nie pobierasz — wszystkie źródła dodajesz linkiem (ramka niżej).</p></div>
+  <div class="box"><h3>Linki do wklejenia <span>„Dodaj źródła” → „Witryny”</span></h3><ul class="links"><li><span class="lab">Link 01 · raport NASK „Nastolatki” (PDF, 172 strony)</span><span class="urlrow"><code class="url" id="z04-l1">https://www.nask.pl/media/2026/06/Nastolatki_RAPORT_BADAWCZY.pdf</code><button type="button" class="btn small" data-copy="z04-l1">Kopiuj</button></span></li><li><span class="lab">Link 02 · Fundacja Dajemy Dzieciom Siłę — „Do 12. roku życia — bez smartfona”</span><span class="urlrow"><code class="url" id="z04-l2">https://domowezasadyekranowe.fdds.pl/zasady/do-12-roku-zycia-bez-smartfona/</code><button type="button" class="btn small" data-copy="z04-l2">Kopiuj</button></span></li><li><span class="lab">Link 03 · film NASK na YouTube — „Jak rozmawiać z dziećmi o internecie i mediach społecznościowych?” (3:44)</span><span class="urlrow"><code class="url" id="z04-l3">https://www.youtube.com/watch?v=KSQrfWBdy9M</code><button type="button" class="btn small" data-copy="z04-l3">Kopiuj</button></span></li></ul><div class="row"><span hidden id="z04-g4">https://www.nask.pl/media/2026/06/Nastolatki_RAPORT_BADAWCZY.pdf https://domowezasadyekranowe.fdds.pl/zasady/do-12-roku-zycia-bez-smartfona/ https://www.youtube.com/watch?v=KSQrfWBdy9M</span><button type="button" class="btn ghost small" data-copy="z04-g4">Kopiuj 3 adresy naraz</button></div><p class="hint">Kilka adresów wklejasz w jedno pole „Adresy URL witryn i YouTube”, oddzielone spacją.</p></div>
+  <h3 class="steps-h">Krok po kroku</h3>
+  <ol class="steps" start="1"><li value="1"><p><strong>Nowy notatnik</strong> → nazwa „Dzieci w sieci — zebranie” → <strong>Dodaj źródła</strong> → <strong>Witryny</strong> → w polu „Adresy URL witryn i YouTube” wklej trzy adresy z ramki „Linki do wklejenia” (raport NASK, FDDS, film), oddzielone spacją → <strong>Wstaw</strong>. Raport jest duży — poczekaj ok. pół minuty, aż się wczyta. Na liście źródeł raport będzie widoczny jako adres internetowy, a nie tytuł — to normalne.</p></li><li value="2"><p><strong>Czat</strong> (skopiuj):</p>
+<div class="prompt"><pre id="z04-p5">Ile czasu dziennie nastolatki spędzają w internecie i o ile rodzice ten czas zaniżają? Podaj liczby i napisz, jakich uczniów dotyczy badanie (które klasy, kiedy).</pre><button type="button" class="btn small" data-copy="z04-p5">Kopiuj</button></div>
+<p class="then">→ <strong>kliknij numer przypisu</strong> przy każdej liczbie i sprawdź, czy podświetlony fragment raportu podaje tę samą liczbę. Zapisz, jakich klas dotyczy badanie — przyda się w kroku 4.</p></li><li value="3"><p>Studio → kliknij kafelek <strong>Fiszki</strong> → w polu <strong>„Jaki ma być temat?”</strong> wpisz:</p>
+<div class="prompt"><pre id="z04-p6">15 fiszek po polsku dla nauczyciela. Z przodu pytanie, z tyłu liczba albo krótki fakt z raportu NASK „Nastolatki” albo jedna rada z materiałów FDDS. Przy każdej fiszce zaznacz, z którego źródła pochodzi.</pre><button type="button" class="btn small" data-copy="z04-p6">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> (ok. 1 min).</p></li><li value="4"><p><strong>Sprawdź fiszki — AI proponuje, Ty decydujesz:</strong></p>
+<ul><li>Wybierz 3 fiszki z liczbami i o każdą zapytaj w czacie: <span class="inl"><code id="z04-i7">Skąd jest liczba …? Podaj stronę raportu.</code><button type="button" class="copy-mini" data-copy="z04-i7">Kopiuj</button></span> → kliknij przypis. Czy liczba we fragmencie jest ta sama? Numer strony od AI też sprawdź — bywa przesunięty o jedną stronę.</li><li>Szukaj fiszki z <strong>dwiema</strong> liczbami albo słowami typu „co trzeci” obok procentu. Czy obie mówią o tym samym? AI potrafi skleić dwa zdania raportu, które do siebie nie pasują.</li><li>Czy rada „do 12. roku życia bez smartfona” ma etykietę FDDS, a nie NASK? To dwa różne rodzaje wiedzy: dane z badania i zalecenie fundacji.</li><li>Czy fiszki mówią „dzieci” ogólnie, choć badanie dotyczy klas 7–8 i szkół średnich? Pasuje to do Twojej klasy?</li><li>Zdecyduj: które 3 liczby i 3 rady weźmiesz na zebranie?</li></ul></li></ol>
+  <details class="extra"><summary>Jeśli zostanie czas <span>kroki 5–7</span></summary><ol class="steps" start="5"><li value="5"><p><strong>Podcast do posłuchania w drodze</strong> (liczy się ok. 5 min — posłuchasz po zajęciach): Studio → kafelek <strong>Podsumowanie audio</strong> → okno „Dostosuj podsumowanie audio”: format „Szczegółowe omówienie”, <strong>Długość</strong> — „Krótkie”, język polski; w polu <strong>„Na czym prezenterzy AI powinni się skupić w tym odcinku?”</strong> wpisz:</p>
+<div class="prompt"><pre id="z04-p8">Podcast po polsku dla wychowawcy szkoły podstawowej, który przygotowuje się do zebrania z rodzicami. Najpierw 5 najważniejszych liczb z raportu NASK „Nastolatki” (wiek pierwszego smartfona, czas w internecie, media społecznościowe, cyberprzemoc, sztuczna inteligencja) — przy każdej powiedz, kogo dotyczy badanie. Potem 3 praktyczne rady dla rodziców z materiałów Fundacji Dajemy Dzieciom Siłę i NASK. Spokojny ton, bez straszenia.</pre><button type="button" class="btn small" data-copy="z04-p8">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Podcast nie ma przypisów — liczby, które usłyszysz, sprawdź potem w czacie.</p></li><li value="6"><p><strong>Mapa tematu:</strong> Studio → kafelek <strong>Mapa myśli</strong> → pole „Jaki ma być temat?” zostaw puste → <strong>Wygeneruj teraz</strong> → otwórz mapę → kliknij gałąź najbliższą Twoim uczniom (np. „Media społecznościowe” albo „Cyberzagrożenia i bezpieczeństwo”). Odpowiedź pojawi się w czacie, z przypisami.</p></li><li value="7"><p><strong>Quiz dla siebie:</strong> Studio → kafelek <strong>Test</strong> (okno nazywa się „Quiz”): <strong>Poziom trudności</strong> — „Średni (domyślny)”; w polu <strong>„Jaki ma być temat?”</strong> wpisz:</p>
+<div class="prompt"><pre id="z04-p9">10 pytań po polsku dla nauczyciela, który chce sprawdzić, co zapamiętał z raportu NASK „Nastolatki” i z rad Fundacji Dajemy Dzieciom Siłę. Cztery odpowiedzi, jedna poprawna.</pre><button type="button" class="btn small" data-copy="z04-p9">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> i rozwiąż quiz sam(a).</p></li></ol></details>
+  <div class="row foot"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a><a class="up" href="#zestawy">↑ Lista zestawów</a></div>
+</section>
+
+<section class="set" id="zestaw-09">
+  <p class="kicker">Na pierwszy raz · 15 min</p>
+  <h2><b>09</b>Telefony w szkole — przygotowanie do zebrania z rodzicami</h2>
+  <div class="task"><b>Twój wynik:</b> prezentacja na zebranie z rodzicami klasy 6 (7 slajdów), w której każda „zasada SP4” jest sprawdzona w czacie.</div>
+  <p>Za tydzień zebranie z rodzicami klasy 6. Rodzice pytają: „Co z telefonami? Słyszeliśmy o zakazie”. W Studio kliknięcie kafelka niczego jeszcze nie generuje: otwiera okno „Dostosuj…”, a generowanie rusza dopiero po <strong>„Wygeneruj teraz”</strong>.</p>
+  <div class="box"><h3>Pliki do pobrania <span>4 pliki</span></h3><ul class="files"><li><a class="file" href="zestaw-09/01-bezpieczenstwo-w-szkole-procedury-2024.pdf" download><span class="fname">01-bezpieczenstwo-w-szkole-procedury-2024.pdf</span><span class="fmeta">PDF · 789 KB</span></a></li><li><a class="file" href="zestaw-09/02-statut-sp4-2024.pdf" download><span class="fname">02-statut-sp4-2024.pdf</span><span class="fmeta">PDF · 568 KB</span></a></li><li><a class="file" href="zestaw-09/03-men-przewodnik-szkola-podstawowa-bez-smartfonow.pdf" download><span class="fname">03-men-przewodnik-szkola-podstawowa-bez-smartfonow.pdf</span><span class="fmeta">PDF · 1,1 MB</span></a></li><li><a class="file" href="zestaw-09/04-ustawa-dz-u-2026-poz-1036-telefony.pdf" download><span class="fname">04-ustawa-dz-u-2026-poz-1036-telefony.pdf</span><span class="fmeta">PDF · 205 KB</span></a></li></ul><p class="hint">Kliknij każdy plik — zapisze się zwykle w folderze „Pobrane”. Potem w NotebookLM: „Dodaj źródła” → „Prześlij pliki”.</p></div>
+  
+  <h3 class="steps-h">Krok po kroku</h3>
+  <ol class="steps" start="1"><li value="1"><p><strong>Nowy notatnik</strong> → nazwa „Telefony — zebranie” → <strong>Dodaj źródła</strong> → <strong>Prześlij pliki</strong> → 4 pliki PDF naraz.</p></li><li value="2"><p><strong>Najpierw uruchom prezentację</strong> (liczy się do ok. 7 min — w tym czasie pracuj w czacie): Studio → kafelek <strong>Prezentacja</strong> (okno „Dostosuj prezentację”) → format <strong>Slajdy prezentera</strong>, język <strong>polski</strong>, wpisz:</p>
+<div class="prompt"><pre id="z09-p1">Prezentacja po polsku na zebranie z rodzicami uczniów klasy 6 Szkoły Podstawowej nr 4 w Bolesławcu. 7 slajdów, krótkie punkty, prosty język. 1) Co się zmieniło od 1 września 2026 r. 2) Gdzie i kiedy obowiązuje zakaz. 3) Trzy wyjątki. 4) Co robi nauczyciel, gdy uczeń używa telefonu bez zgody (procedura SP4). 5) Kontakt z dzieckiem w nagłej sprawie. 6) Czego szkoła oczekuje od rodziców. 7) Gdzie przeczytać dokumenty. Nie dopisuj rozwiązań, których nie ma w dokumentach SP4 ani w ustawie.</pre><button type="button" class="btn small" data-copy="z09-p1">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>.</p></li><li value="3"><p><strong>Czat</strong> (skopiuj):</p>
+<div class="prompt"><pre id="z09-p2">Co dokładnie robi nauczyciel, gdy uczeń używa telefonu na lekcji bez zgody? Wypisz kroki po kolei i podaj dokument oraz punkt.</pre><button type="button" class="btn small" data-copy="z09-p2">Kopiuj</button></div>
+<p class="then">→ <strong>kliknij numer przypisu</strong>. Czy prowadzi do procedury 3.11 (albo § 50 statutu)? Przeczytaj podświetlony fragment — czy kroki się zgadzają? Zapamiętaj, jakimi słowami procedura opisuje, co uczeń ma zrobić z telefonem.</p></li><li value="4"><p><strong>Sprawdź prezentację — AI proponuje, Ty decydujesz:</strong></p>
+<ul><li>Przy każdym slajdzie zapytaj siebie: to <strong>zasada SP4</strong>, <strong>ustawa</strong>, czy <strong>przykład z innej szkoły</strong> z przewodnika MEN (plecaki, koszyki, saszetki, szafki, sekretariat)?</li><li>Slajd o tym, co robi nauczyciel — zapytaj w czacie (skopiuj): <span class="inl"><code id="z09-i3">Czy schowanie telefonu do plecaka to zasada SP4? Z którego źródła to jest?</code><button type="button" class="copy-mini" data-copy="z09-i3">Kopiuj</button></span> → kliknij przypis.</li><li>Slajd o kontakcie w nagłej sprawie — zapytaj w czacie: <span class="inl"><code id="z09-i4">Czy kontakt z dzieckiem przez sekretariat to zasada SP4? Z którego źródła to jest?</code><button type="button" class="copy-mini" data-copy="z09-i4">Kopiuj</button></span> → kliknij przypis.</li><li>Przy innym wątpliwym zdaniu: <span class="inl"><code id="z09-i5">Skąd jest zdanie „…”? Podaj dokument i punkt.</code><button type="button" class="copy-mini" data-copy="z09-i5">Kopiuj</button></span></li><li>Czy prezentacja nie mówi, że w SP4 zakaz jest „tylko na lekcjach”, skoro ustawa obejmuje też przerwy?</li><li>Zanim pokażesz to rodzicom: co z tego wymaga potwierdzenia u dyrekcji (np. gdzie uczniowie SP4 odkładają telefony, kiedy zmieni się statut)?</li></ul></li></ol>
+  <details class="extra"><summary>Jeśli zostanie czas <span>kroki 5–7</span></summary><ol class="steps" start="5"><li value="5"><p><strong>Stare i nowe przepisy</strong> (skopiuj do czatu):</p>
+<div class="prompt"><pre id="z09-p6">Porównaj zasady o telefonach z dokumentów SP4 (2024) z ustawą obowiązującą od 1 września 2026 r. Zrób tabelę: temat | SP4 | ustawa | źródło. Uwzględnij: kiedy obowiązuje zakaz (lekcje, przerwy), wyjątki, wycieczki, co robi nauczyciel, termin zmiany statutu.</pre><button type="button" class="btn small" data-copy="z09-p6">Kopiuj</button></div>
+<p class="then">→ kliknij przypisy w kolumnie „ustawa” i „SP4”. Gdzie dokumenty szkoły mówią co innego niż ustawa?</p></li><li value="6"><p><strong>Infografika dla rodziców</strong> (ok. 2 min): Studio → kafelek <strong>Infografika</strong> (okno „Dostosuj infografikę”) → orientacja <strong>Pionowo</strong>; wpisz:</p>
+<div class="prompt"><pre id="z09-p7">Infografika dla rodziców po polsku. Tytuł: „Telefon w szkole — zasady od 1 września 2026”. Trzy części: 1) Zakaz: kiedy i gdzie. 2) Trzy wyjątki. 3) Co robi nauczyciel, gdy uczeń używa telefonu bez zgody. Mało tekstu, duże litery, bez nazwisk.</pre><button type="button" class="btn small" data-copy="z09-p7">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Sprawdź: polskie litery, daty, liczba wyjątków (powinny być 3), plecak w części 3.</p></li><li value="7"><p><strong>Popraw polecenie: dopisz »Tylko informacje ze źródeł. Czego brak, oznacz [BRAK W ŹRÓDŁACH]« i wygeneruj jeszcze raz — co się zmieniło?</strong> Studio → kafelek <strong>Prezentacja</strong> (albo <strong>Infografika</strong>, jest szybsza) → wklej to samo polecenie co wcześniej i dopisz na końcu:</p>
+<div class="prompt"><pre id="z09-p8">Tylko informacje ze źródeł. Czego brak, oznacz [BRAK W ŹRÓDŁACH].</pre><button type="button" class="btn small" data-copy="z09-p8">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> → porównaj z pierwszą wersją (przed i po). Czy zniknął plecak? Sekretariat? Gdzie pojawił się znacznik [BRAK W ŹRÓDŁACH] — i czy taki slajd można pokazać rodzicom bez poprawki?</p></li></ol></details>
+  <div class="row foot"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a><a class="up" href="#zestawy">↑ Lista zestawów</a></div>
+</section>
+<h2 class="group" id="grupa-chetni">Dla chętnych</h2>
+
+<section class="set" id="zestaw-03">
+  <p class="kicker">Dla chętnych · 15 min</p>
+  <h2><b>03</b>11 Listopada — infografika na gazetkę i krótki film na apel</h2>
+  <div class="task"><b>Twój wynik:</b> infografika na gazetkę „Droga do Niepodległej — listopad 1918”, z każdą datą sprawdzoną w przypisach.</div>
+  <p>Sytuacja: za dwa tygodnie apel z okazji 11 Listopada dla klas 4–6, a do piątku przed apelem ma wisieć gazetka. Jest konspekt apelu ze „ściągą z faktów spisaną z pamięci”, artykuł z portalu historycznego, artykuł IPN i godzinny podcast muzeum, na którego obejrzenie nie ma czasu.</p>
+<p>W Studio kliknięcie kafelka niczego jeszcze nie generuje: otwiera okno „Dostosuj…”, a generowanie rusza dopiero po <strong>„Wygeneruj teraz”</strong>.</p>
+  <div class="box"><h3>Pliki do pobrania <span>1 plik</span></h3><ul class="files"><li><a class="file" href="zestaw-03/01-konspekt-apelu-11-listopada.docx" download><span class="fname">01-konspekt-apelu-11-listopada.docx</span><span class="fmeta">Word (DOCX) · 6 KB</span></a></li></ul><p class="hint">Kliknij każdy plik — zapisze się zwykle w folderze „Pobrane”. Potem w NotebookLM: „Dodaj źródła” → „Prześlij pliki”.</p></div>
+  <div class="box"><h3>Linki do wklejenia <span>„Dodaj źródła” → „Witryny”</span></h3><ul class="links"><li><span class="lab">Link 02 · dzieje.pl — „107 lat temu Józef Piłsudski przejął władzę z rąk Rady Regencyjnej”</span><span class="urlrow"><code class="url" id="z03-l1">https://dzieje.pl/107-lat-temu-jozef-pilsudski-przejal-wladze-z-rak-rady-regencyjnej-ten-moment-stal-sie-symbolem</code><button type="button" class="btn small" data-copy="z03-l1">Kopiuj</button></span></li><li><span class="lab">Link 04 · podcast Muzeum Historii Polski na YouTube — „Dlaczego świętujemy 11 listopada?” (53 min)</span><span class="urlrow"><code class="url" id="z03-l2">https://www.youtube.com/watch?v=o2q9GFQy774</code><button type="button" class="btn small" data-copy="z03-l2">Kopiuj</button></span></li><li><span class="lab">Link 03 · Przystanek Historia (IPN) — „Polacy a Święto Niepodległości” — wklej osobno</span><span class="urlrow"><code class="url" id="z03-l3">https://przystanekhistoria.pl/pa2/tematy/niepodleglosc/75953%2CPolacy-a-Swieto-Niepodleglosci.html</code><button type="button" class="btn small" data-copy="z03-l3">Kopiuj</button></span></li></ul><div class="row"><span hidden id="z03-g4">https://dzieje.pl/107-lat-temu-jozef-pilsudski-przejal-wladze-z-rak-rady-regencyjnej-ten-moment-stal-sie-symbolem https://www.youtube.com/watch?v=o2q9GFQy774</span><button type="button" class="btn ghost small" data-copy="z03-g4">Kopiuj link 02 i 04 razem</button></div><p class="hint">Kilka adresów wklejasz w jedno pole „Adresy URL witryn i YouTube”, oddzielone spacją.</p></div>
+  <h3 class="steps-h">Krok po kroku</h3>
+  <ol class="steps" start="1"><li value="1"><p><strong>Nowy notatnik</strong> → nazwij go „11 Listopada — gazetka i apel” → dodaj źródła:</p>
+<ul><li><strong>Dodaj źródła</strong> → <strong>Prześlij pliki</strong> → plik <code>01-konspekt-apelu-11-listopada.docx</code>,</li><li><strong>Dodaj źródła</strong> → <strong>Witryny</strong> → w polu „Adresy URL witryn i YouTube” wklej link 02 (dzieje.pl) i link 04 (YouTube) z ramki „Linki do wklejenia”, oddzielone spacją → <strong>Wstaw</strong>,</li><li>jeszcze raz <strong>Dodaj źródła</strong> → <strong>Witryny</strong> → osobno link 03 (IPN). Wklej go dokładnie tak, jak w ramce „Linki do wklejenia” — z <code>%2C</code> zamiast przecinka (zwykły przecinek NotebookLM bierze za separator i odrzuca adres).</li></ul>
+<p>Poczekaj, aż wszystkie 4 źródła się wczytają. Jeśli odpowiedzi wychodzą po angielsku: ustawienia notatnika → język odpowiedzi → polski.</p></li><li value="2"><p><strong>Zapytaj w czacie</strong> (skopiuj):</p>
+<div class="prompt"><pre id="z03-p5">Kiedy i skąd Józef Piłsudski przyjechał do Warszawy w listopadzie 1918 roku i co wydarzyło się 11 listopada? Czy wszystkie źródła podają to samo? Jeśli nie, napisz, które źródło co mówi.</pre><button type="button" class="btn small" data-copy="z03-p5">Kopiuj</button></div>
+<p class="then">→ <strong>Sprawdź:</strong> kliknij przypis przy każdej dacie przyjazdu. Z którego źródła pochodzi? Czy podświetlony fragment naprawdę ją podaje? Porównaj ze „ściągą” w konspekcie: która data jest w konspekcie, a która w artykule?</p></li><li value="3"><p><strong>Studio → kafelek „Infografika”</strong> (okno „Dostosuj infografikę”): orientacja <strong>„Pionowo”</strong>, w polu opisu wpisz:</p>
+<div class="prompt"><pre id="z03-p6">Infografika na gazetkę szkolną dla uczniów klas 4–6: „Droga do Niepodległej — listopad 1918”. Oś czasu z 5–6 datami: od 10 listopada 1918 do ustanowienia święta w 1937 roku. Przy każdej dacie jedno krótkie zdanie prostym językiem. Po polsku, duża czcionka, mało tekstu. Bez portretów osób, bez nazwisk na obrazkach.</pre><button type="button" class="btn small" data-copy="z03-p6">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> (ok. 3 min). Jeśli pojawi się „Nie udało się wygenerować infografiki” — kliknij „Spróbuj ponownie” raz; jeśli znowu nie wyjdzie, poproś prowadzącego o gotową infografikę z testu.</p></li><li value="4"><p><strong>Sprawdź infografikę z przypisami.</strong> Infografika nie ma przypisów, więc każdą datę z obrazka sprawdź w czacie: zapytaj <span class="inl"><code id="z03-i7">Co wydarzyło się [data z infografiki]? Podaj źródło.</code><button type="button" class="copy-mini" data-copy="z03-i7">Kopiuj</button></span> → kliknij przypis. Szczególnie:</p>
+<ul><li>10 czy 11 listopada — kiedy Piłsudski przyjechał do Warszawy?</li><li>jeśli jest 14 listopada — czy chodzi o rok 1918, czy o 1920?</li><li>polskie litery (ą, ę, ł, ó, ś, ż) na obrazku.</li></ul>
+<p>Zanotuj błędy. Popraw: wygeneruj infografikę jeszcze raz z dopisaną poprawką w instrukcji albo popraw napis w Canvie lub Prezentacjach Google. <strong>AI proponuje, Ty decydujesz</strong> — na gazetce podpisuje się szkoła, nie NotebookLM.</p></li></ol>
+  <details class="extra"><summary>Jeśli zostanie czas <span>kroki 5–7</span></summary><ol class="steps" start="5"><li value="5"><p><strong>Film na apel</strong> (liczy się ok. 10 min — obejrzysz go na końcu albo po zajęciach): Studio → kafelek <strong>„Podsumowanie wideo”</strong> (okno „Dostosuj podsumowanie wideo”) → format <strong>„Film objaśniający”</strong> (poziomy, na rzutnik; „Krótkie” to pionowa rolka na telefon) → styl wizualny zostaw „Wybór automatyczny” → w polu „Temat niestandardowy” wpisz:</p>
+<div class="prompt"><pre id="z03-p8">Film na szkolny apel dla uczniów klas 4–6: co wydarzyło się 10 i 11 listopada 1918 roku i dlaczego 11 listopada jest świętem. Mów jak do 10-latków: krótkie zdania, proste słowa, bez trudnych nazw urzędów i rządów — jeśli musisz jakąś podać, wyjaśnij ją jednym prostym zdaniem. Spokojny, uroczysty ton, po polsku. Tylko fakty ze źródeł.</pre><button type="button" class="btn small" data-copy="z03-p8">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Gdy będzie gotowy: czy daty są te same, które sprawdzono w kroku 4? Czy 10-latek zrozumie każde słowo? Decyzja: pokazujemy na apelu / poprawiamy / rezygnujemy.</p></li><li value="6"><p><strong>Kiedy 11 listopada stał się świętem</strong> (skopiuj do czatu):</p>
+<div class="prompt"><pre id="z03-p9">Kiedy 11 listopada został oficjalnie świętem państwowym i kiedy wrócił do kalendarza po czasach PRL? Podaj, które źródło co mówi.</pre><button type="button" class="btn small" data-copy="z03-p9">Kopiuj</button></div>
+<p class="then">→ kliknij przypisy. Czy źródła podają ten sam rok?</p></li><li value="7"><p><strong>Quiz na apel:</strong> Studio → kafelek <strong>„Test”</strong> (okno „Quiz”): liczba pytań <strong>„Mniej”</strong>, poziom <strong>„Łatwy”</strong>, w polu „Jaki ma być temat?” wpisz:</p>
+<div class="prompt"><pre id="z03-p10">Quiz na apel dla klas 4–6: 5 pytań o listopad 1918 i Święto Niepodległości. Tylko pytania, na które źródła odpowiadają jednoznacznie i zgodnie. Prosty język.</pre><button type="button" class="btn small" data-copy="z03-p10">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong> → przy każdym pytaniu sprawdź odpowiedź w czacie (przypis).</p></li></ol></details>
+  <div class="row foot"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a><a class="up" href="#zestawy">↑ Lista zestawów</a></div>
+</section>
+
+<section class="set" id="zestaw-08">
+  <p class="kicker">Dla chętnych · 15 min</p>
+  <h2><b>08</b>Indywidualny tok nauki — odpowiedź dla rodzica</h2>
+  <div class="task"><b>Twój wynik:</b> odpowiedź na mail rodzica (najwyżej 250 słów), sprawdzona w przypisach — gotowa do poprawienia i wysłania.</div>
+  <p>Mama pierwszoklasistki pisze do wychowawczyni z pytaniami o indywidualny tok nauki. Przygotowują Państwo odpowiedź opartą na dokumentach szkoły i przepisach. Mail jest fikcyjny; w prawdziwej sprawie przed wgraniem usuń z maila imiona, nazwiska i informacje o zdrowiu dziecka. W Studio kliknięcie kafelka niczego jeszcze nie generuje: otwiera okno „Dostosuj…” albo listę formatów, a generowanie rusza dopiero po <strong>„Wygeneruj teraz”</strong>.</p>
+  <div class="box"><h3>Pliki do pobrania <span>4 pliki</span></h3><ul class="files"><li><a class="file" href="zestaw-08/01-procedura-indywidualny-program-tok-nauki.pdf" download><span class="fname">01-procedura-indywidualny-program-tok-nauki.pdf</span><span class="fmeta">PDF · 2,6 MB</span></a></li><li><a class="file" href="zestaw-08/02-statut-sp4-2024.pdf" download><span class="fname">02-statut-sp4-2024.pdf</span><span class="fmeta">PDF · 568 KB</span></a></li><li><a class="file" href="zestaw-08/03-rozporzadzenie-men-2017-indywidualny-program-tok.pdf" download><span class="fname">03-rozporzadzenie-men-2017-indywidualny-program-tok.pdf</span><span class="fmeta">PDF · 239 KB</span></a></li><li><a class="file" href="zestaw-08/04-mail-od-rodzica-kl1.docx" download><span class="fname">04-mail-od-rodzica-kl1.docx</span><span class="fmeta">Word (DOCX) · 3 KB</span></a></li></ul><p class="hint">Kliknij każdy plik — zapisze się zwykle w folderze „Pobrane”. Potem w NotebookLM: „Dodaj źródła” → „Prześlij pliki”.</p></div>
+  
+  <h3 class="steps-h">Krok po kroku</h3>
+  <ol class="steps" start="1"><li value="1"><p>Nowy notatnik → nazwa „ITN — odpowiedź dla rodzica” → <strong>Dodaj źródła</strong> → <strong>Prześlij pliki</strong> → cztery pliki.</p></li><li value="2"><p><strong>Najpierw uruchom list</strong> (liczy się 1–2 min — w tym czasie pracuj w czacie): Studio → kafelek <strong>Raporty</strong> → format <strong>Dokument</strong> (w domyślnym „Interaktywny” nie ma „Utwórz własny”) → <strong>Utwórz własny</strong>, wpisz:</p>
+<div class="prompt"><pre id="z08-p1">Napisz po polsku odpowiedź na mail rodzica (źródło 04) w formie listu od wychowawczyni klasy 1b. Najwyżej 250 słów, bez nagłówków. Ton uprzejmy i życzliwy, prosty język. Odpowiedz po kolei na każde z 7 pytań: konkretne kroki, kto co robi i terminy. Numery paragrafów podawaj tylko w nawiasach. Jeśli źródła czegoś nie mówią (np. ile trwa rozpatrzenie wniosku albo czy wystarczy wcześniejsza opinia poradni), napisz wprost, że to sprawdzimy w sekretariacie — nie zgaduj. Zakończ propozycją spotkania.</pre><button type="button" class="btn small" data-copy="z08-p1">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>.</p></li><li value="3"><p>Zapytaj w czacie (skopiuj):</p>
+<div class="prompt"><pre id="z08-p2">Rodzic pyta w mailu (źródło 04), czy może złożyć wniosek o indywidualny tok nauki dla córki z klasy 1 już w listopadzie, żeby od drugiego półrocza uczyła się matematyki z programu klasy 2. Kiedy najwcześniej szkoła może wydać zgodę? Podaj konkretny moment w roku szkolnym 2026/2027.</pre><button type="button" class="btn small" data-copy="z08-p2">Kopiuj</button></div>
+<p class="then">→ kliknij przypisy. Odpowiedź powinna łączyć rozporządzenie albo procedurę (zgoda po roku nauki, w uzasadnionych przypadkach po klasyfikacji śródrocznej) ze statutem (pierwsze śródrocze trwa do końca stycznia). Jeśli przypis prowadzi do procedury — zobacz, jak wygląda zeskanowany tekst.</p></li><li value="4"><p><strong>Sprawdź list — AI proponuje, Ty decydujesz.</strong> Raporty nie mają klikalnych przypisów, więc fakty z listu sprawdzasz w czacie:</p>
+<ul><li>Zapytaj (skopiuj): <span class="inl"><code id="z08-i3">Kto zasięga opinii poradni — rodzic czy dyrektor? Podaj przypis.</code><button type="button" class="copy-mini" data-copy="z08-i3">Kopiuj</button></span> → kliknij przypis. Co mówi o tym list?</li><li>Termin z listu porównaj z odpowiedzią z kroku 3. Czy list nie obiecuje zgody od lutego, choć to możliwe tylko w uzasadnionym przypadku?</li><li>Czy list podaje termin odwołania (14 dni do kuratora oświaty)? Zapytaj w czacie: <span class="inl"><code id="z08-i4">Ile dni ma rodzic na odwołanie i do kogo? Podaj przypis.</code><button type="button" class="copy-mini" data-copy="z08-i4">Kopiuj</button></span></li><li>Czy list powołuje się na rozporządzenie z 2017 r., a nie z 2001 r.?</li><li>Czy mieści się w 250 słowach? Wysłałbyś ten list? Co zmieniasz przed wysłaniem?</li></ul></li></ol>
+  <details class="extra"><summary>Jeśli zostanie czas <span>kroki 5–7</span></summary><ol class="steps" start="5"><li value="5"><p><strong>Porównaj źródła</strong> (skopiuj do czatu):</p>
+<div class="prompt"><pre id="z08-p5">Porównaj procedurę szkoły (źródło 01) z rozporządzeniem z 2017 r. (źródło 03). Zrób tabelę: punkt | co mówi procedura | co mówi rozporządzenie | czy się różnią. Na jakie rozporządzenie powołuje się procedura na pierwszej stronie?</pre><button type="button" class="btn small" data-copy="z08-p5">Kopiuj</button></div>
+<p class="then">→ sprawdź przypisy przy różnicach (do kogo składa się wniosek, na jaki czas wydaje się zgodę, data rozporządzenia w nagłówku procedury).</p></li><li value="6"><p><strong>Tabela kroków dla rodzica:</strong> Studio → kafelek <strong>Tabela danych</strong> (okno „Dostosuj tabelę danych”), wpisz:</p>
+<div class="prompt"><pre id="z08-p6">Język: polski. Tabela kroków dla rodzica: Krok | Kto to robi | Kiedy / termin | Dokument lub wzór (np. załącznik nr 1 do procedury). Od złożenia wniosku do decyzji dyrektora i ewentualnego odwołania. Jeśli źródła nie podają terminu, wpisz „źródła nie podają”.</pre><button type="button" class="btn small" data-copy="z08-p6">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Sprawdź w kolumnie „Kto to robi”: kto zasięga opinii poradni? (porównaj z odpowiedzią z kroku 4).</p></li><li value="7"><p><strong>Krótkie nagranie dla rodziców</strong> (liczy się ok. 5 min — odsłuchasz po zajęciach): Studio → kafelek <strong>Podsumowanie audio</strong> (okno „Dostosuj podsumowanie audio”) → format <strong>Krótkie</strong>, język <strong>polski</strong>, wpisz:</p>
+<div class="prompt"><pre id="z08-p7">Krótkie wyjaśnienie dla rodziców uczniów szkoły podstawowej: czym różni się indywidualny program nauki od indywidualnego toku nauki, kto może złożyć wniosek, od kiedy najwcześniej można dostać zgodę, jakie są kolejne kroki i kto decyduje. Prosty język, bez numerów paragrafów, spokojny ton.</pre><button type="button" class="btn small" data-copy="z08-p7">Kopiuj</button></div>
+<p class="then">→ <strong>Wygeneruj teraz</strong>. Nagranie nie ma przypisów — sprawdź po odsłuchu, czy nie pada podstawa prawna z 2001 r. i czy nie obiecuje zgody od lutego.</p></li></ol></details>
+  <div class="row foot"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz NotebookLM ↗</a><a class="up" href="#zestawy">↑ Lista zestawów</a></div>
+</section>
+
+  <footer><span>AI proponuje, <b>Ty decydujesz</b>.</span><span>Łukasz Kasprzyk</span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch (_) {}
+    ta.remove(); return ok;
+  }
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  const el = document.getElementById(b.dataset.copy); if (!el) return;
+  if (await copyText(el.textContent.trim())) {
+    toast("Skopiowano — teraz wklej w NotebookLM");
+    if (!b.dataset.label) b.dataset.label = b.textContent;
+    b.textContent = "Skopiowano ✓"; b.classList.add("done");
+    setTimeout(() => { b.textContent = b.dataset.label; b.classList.remove("done"); }, 1600);
+  } else {
+    toast("Nie udało się skopiować — zaznacz tekst myszą i naciśnij Ctrl+C");
+  }
+});
+</script>
+</body>
+</html>

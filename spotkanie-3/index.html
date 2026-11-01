@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warsztat AI — spotkanie 3</title>
+<!-- Spotkanie 3: polecenia do skopiowania (doradca problemu, poprawiacz, montaż, przepis na styl) i linki. Jeden plik, bez bibliotek. Styl jak ../spotkanie-2/. -->
+<style>
+  /* Kolory i fonty jak ../index.html (slajdy spotkania 1: krem, terakota, Georgia + Arial). Tylko jasny motyw, jak prezentacja. */
+  :root {
+    --bg: #F7F5F0; --card: #FFFFFF; --ink: #1F1E1C; --muted: #6E6A62; --line: #DCD5C8;
+    --accent: #B4532A; --accent-ink: #FFFFFF; --soft: #EFEBE3; --accent-soft: #F5E6DE;
+    --serif: Georgia, "Times New Roman", serif; --sans: Arial, "Helvetica Neue", sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 var(--sans); overflow-wrap: break-word; }
+  a { color: var(--accent); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 16px 64px; }
+  .back { display: inline-block; font-size: 0.9rem; color: var(--muted); margin-bottom: 18px; }
+  .eyebrow { color: var(--accent); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; margin: 0 0 14px; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: 2.6rem; line-height: 1.1; margin: 0 0 6px; }
+  .tagline { font-family: var(--serif); font-style: italic; color: var(--accent); font-size: 1.3rem; margin: 0 0 10px; }
+  .sub { color: var(--muted); margin: 0 0 26px; font-size: 0.95rem; }
+
+  .start { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 18px 22px; margin-bottom: 30px; }
+  .start h2 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; margin: 0 0 10px; }
+  .start ol { margin: 0; padding-left: 1.4em; }
+  .start li { margin-bottom: 10px; }
+  .start li::marker { color: var(--accent); font-weight: 700; }
+  .start .row { margin-top: 6px; }
+  .note { background: var(--accent-soft); border-radius: 6px; padding: 10px 14px; margin: 14px 0 0; font-size: 0.95rem; }
+
+  .navgroup { margin-bottom: 18px; }
+  .navgroup h3 { font-family: var(--sans); font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin: 0 0 2px; }
+  .gdesc { margin: 0 0 8px; color: var(--muted); font-size: 0.92rem; }
+  .picker { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .pick { display: block; text-decoration: none; color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .pick:hover, .pick:focus { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); outline: none; }
+  .pick b { display: block; font-family: var(--serif); font-weight: 400; font-size: 2.2rem; line-height: 1; margin-bottom: 6px; color: var(--accent); }
+  .pick .pt { display: block; font-weight: 700; line-height: 1.3; }
+  .pick .pw { display: block; color: var(--muted); font-size: 0.88rem; margin-top: 6px; line-height: 1.35; }
+
+  h2.group { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; margin: 44px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); scroll-margin-top: 12px; }
+  section.set { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin-bottom: 22px; scroll-margin-top: 12px; }
+  .kicker { color: var(--accent); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 6px; }
+  section.set h2 { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; line-height: 1.2; margin: 0 0 14px; }
+  section.set h2 b { font-weight: 400; color: var(--accent); margin-right: 12px; }
+  .task { background: var(--soft); border-left: 4px solid var(--accent); border-radius: 4px; padding: 12px 16px; margin-bottom: 14px; }
+  .task > b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; }
+
+  .box { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 14px 0; }
+  .box h3 { font-family: var(--serif); font-weight: 400; font-size: 1.2rem; margin: 0 0 8px; }
+  .box h3 span { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
+  .files, .links { list-style: none; margin: 0; padding: 0; }
+  .files li { margin-bottom: 6px; }
+  .file { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; background: var(--card); border: 1.5px solid var(--line); border-radius: 6px; padding: 9px 12px; text-decoration: none; color: var(--ink); }
+  .file:hover, .file:focus { border-color: var(--accent); }
+  .file .fname { color: var(--accent); font-weight: 700; word-break: break-all; }
+  .file .fname::before { content: "⬇ "; }
+  .file .fmeta { color: var(--muted); font-size: 0.88rem; white-space: nowrap; }
+  .links li { margin-bottom: 10px; }
+  .lab { display: block; font-size: 0.92rem; margin-bottom: 3px; }
+  .urlrow { display: flex; gap: 8px; align-items: center; }
+  code.url { flex: 1; min-width: 0; display: block; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; font-size: 0.85rem; word-break: break-all; }
+  .hint { color: var(--muted); font-size: 0.9rem; margin: 8px 0 0; }
+
+  h3.steps-h { font-family: var(--serif); font-weight: 400; font-size: 1.3rem; margin: 20px 0 6px; }
+  ol.steps { margin: 0; padding-left: 1.6em; }
+  ol.steps > li { margin-bottom: 16px; padding-left: 4px; }
+  ol.steps > li::marker { color: var(--accent); font-weight: 700; font-size: 1.05rem; }
+  ol.steps p { margin: 0 0 8px; }
+  ol.steps ul { margin: 4px 0 8px; padding-left: 1.2em; }
+  ol.steps ul li { margin-bottom: 4px; }
+  p.then { border-left: 3px solid var(--accent); padding: 2px 0 2px 10px; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; background: var(--soft); border-radius: 4px; padding: 1px 5px; }
+  .prompt { margin: 6px 0 10px; }
+  .prompt pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 0.97rem/1.5 var(--sans); background: var(--bg); border: 1px dashed var(--accent); border-radius: 6px; padding: 10px 12px; }
+  .prompt .btn { margin-top: 6px; }
+  .inl code { font-family: var(--sans); font-size: 0.95em; background: var(--accent-soft); padding: 1px 6px; }
+  .copy-mini { font: inherit; font-size: 0.78rem; font-weight: 700; color: var(--accent); background: transparent; border: 1.5px solid var(--accent); border-radius: 5px; padding: 0 6px; margin-left: 5px; cursor: pointer; vertical-align: 1px; }
+
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+  .btn { border: 0; border-radius: 6px; padding: 10px 16px; font: inherit; font-weight: 700; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; display: inline-block; }
+  .btn.small { padding: 6px 14px; font-size: 0.92rem; }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+  .btn.done, .copy-mini.done { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  details.extra { margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 0 14px; background: var(--bg); }
+  details.extra > summary { cursor: pointer; padding: 12px 0; font-family: var(--serif); font-size: 1.2rem; list-style-position: inside; }
+  details.extra > summary span { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
+  details.extra[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+  .foot { justify-content: space-between; margin-top: 16px; }
+  .up { font-size: 0.92rem; }
+
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 18px; border-radius: 20px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); text-align: center; }
+  .toast.show { opacity: 1; }
+  footer { margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.95rem; color: var(--muted); }
+  footer b { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent); font-size: 1.1rem; }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 2rem; }
+    section.set { padding: 16px 14px; }
+    section.set h2 { font-size: 1.35rem; }
+    .picker { grid-template-columns: 1fr; }
+    .pick b { display: inline; margin-right: 8px; font-size: 1.8rem; }
+    .pick .pt { display: inline; }
+    .urlrow { flex-direction: column; align-items: stretch; }
+    .urlrow .btn { align-self: flex-start; }
+    ol.steps { padding-left: 1.3em; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../">← Spotkanie 1: Rozmowa z AI</a> · <a class="back" href="../spotkanie-2/">Spotkanie 2: NotebookLM</a>
+  <p class="eyebrow">Warsztat · spotkanie 3 · 2 listopada</p>
+  <h1>AI do Waszych problemów</h1>
+  <p class="tagline">Narzędzie dobieramy do problemu, nie odwrotnie</p>
+  <p class="sub">Podstawy AI dla nauczycieli · SP4 Bolesławiec. Polecenia do skopiowania i linki ze spotkania 3.</p>
+
+  <div class="start">
+    <h2>Praca w parach — zacznij tutaj</h2>
+    <ol>
+      <li>Otwórz nowy czat: <a href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a> albo <a href="https://chatgpt.com" target="_blank" rel="noopener">ChatGPT</a>.</li>
+      <li>Skopiuj polecenie <a href="#doradca">„Doradca problemu”</a>, wklej i na końcu dopisz swój problem jednym–dwoma zdaniami.</li>
+      <li>Odpowiadaj na pytania AI. Wybierz jeden z zaproponowanych sposobów i zrób pierwszy krok — w dowolnym narzędziu.</li>
+    </ol>
+    <p class="note">Bez imion, nazwisk i danych uczniów, rodziców i współpracowników — wystarczy „Uczeń A”, „Rodzic B”.</p>
+  </div>
+
+  <div class="navgroup">
+    <h3>Na tej stronie</h3>
+    <div class="picker">
+      <a class="pick" href="#doradca"><b>1</b><span class="pt">Doradca problemu</span><span class="pw">AI dopytuje, proponuje 2–3 sposoby i pierwszy krok</span></a>
+      <a class="pick" href="#poprawiacz"><b>2</b><span class="pt">Poprawiacz polecenia</span><span class="pw">gdy AI robi nie to, o co prosisz</span></a>
+      <a class="pick" href="#wideo"><b>3</b><span class="pt">Nagranie „z kilku kamer”</span><span class="pw">plan montażu od AI + darmowe edytory</span></a>
+      <a class="pick" href="#plakaty"><b>4</b><span class="pt">Plakaty i posty w jednym stylu</span><span class="pw">przepis na styl + tekst w Slides albo Canvie</span></a>
+    </div>
+  </div>
+
+  <section class="set" id="doradca">
+    <p class="kicker">Polecenie 1</p>
+    <h2><b>1</b>Doradca problemu</h2>
+    <div class="task"><b>Wklej do nowego czatu, na końcu dopisz swój problem.</b> AI najpierw dopytuje — odpowiedz, zanim poprosisz o rozwiązanie.</div>
+    <div class="prompt"><pre id="p-doradca">Jesteś doświadczonym nauczycielem, który dobrze zna narzędzia AI i pomaga koleżankom i kolegom rozwiązywać problemy z codziennej pracy w szkole.
+
+Opiszę Ci problem. Nie rozwiązuj go od razu. Zrób to tak:
+
+1. Zadaj mi najwyżej 5 krótkich pytań, żeby dobrze zrozumieć problem: co dokładnie zabiera mi czas albo nerwy, jak robię to dziś, jaki ma być wynik, jakie mam materiały i ile czasu chcę na to poświęcać. Poczekaj na moje odpowiedzi.
+2. Potem zaproponuj 2–3 różne sposoby rozwiązania. Przy każdym napisz:
+   - na czym polega (2 zdania),
+   - jakie narzędzie się do tego nadaje (najpierw darmowe, np. Gemini, ChatGPT, Gemini Notebook / NotebookLM, Google Slides, Canva) — i czy wystarczy darmowe konto,
+   - ile czasu zajmie pierwszy raz, a ile kolejne razy,
+   - na co uważać.
+3. Zapytaj, który sposób wybieram.
+4. Dla wybranego sposobu napisz pierwszy krok, który zrobię w 10 minut — jeśli trzeba polecenia dla AI, napisz je w jednym bloku, który mogę skopiować.
+
+Pisz prosto, bez żargonu. Jeśli czegoś nie wiesz albo narzędzie może działać inaczej, powiedz to wprost.
+Nie proś mnie o imiona, nazwiska ani inne dane uczniów, rodziców i współpracowników — wystarczy „Uczeń A”, „Rodzic B”.
+
+Mój problem:
+[opisz tutaj jednym–dwoma zdaniami]</pre><button class="btn small" data-copy="p-doradca">Kopiuj</button></div>
+  </section>
+
+  <section class="set" id="poprawiacz">
+    <p class="kicker">Polecenie 2</p>
+    <h2><b>2</b>Poprawiacz polecenia</h2>
+    <div class="task"><b>Gdy wynik jest „nie taki”.</b> Wklej do nowego czatu, na końcu wklej swoje polecenie.</div>
+    <div class="prompt"><pre id="p-poprawiacz">Jesteś doświadczonym nauczycielem, który pomaga koleżankom i kolegom pisać dobre polecenia dla AI.
+
+Poniżej wklejam moje polecenie. Nie wykonuj go. Pomóż mi je poprawić według pięciu elementów:
+- Rola – kim ma być AI (np. „jesteś wychowawcą klasy 4”),
+- Kontekst – co AI musi wiedzieć o sprawie (klasa, poziom, cel, ważne szczegóły),
+- Zadanie – co dokładnie ma zrobić,
+- Format – jak ma wyglądać wynik (np. 3 akapity, tabela, lista),
+- Zakres – ograniczenia (długość, język, czego unikać).
+
+Zrób to tak:
+1. Sprawdź, których elementów brakuje albo są zbyt ogólne.
+2. Zadaj mi najwyżej 5 krótkich pytań o to, czego brakuje. Poczekaj na moje odpowiedzi.
+3. Potem napisz poprawione polecenie w jednym bloku, który mogę skopiować.
+4. Pod spodem w 2–3 zdaniach napisz, co zmieniłeś i dlaczego.
+
+Nie dopisuj imion, nazwisk ani innych danych osobowych.
+
+Moje polecenie:
+[wklej tutaj]</pre><button class="btn small" data-copy="p-poprawiacz">Kopiuj</button></div>
+  </section>
+
+  <section class="set" id="wideo">
+    <p class="kicker">Problem z maila 1</p>
+    <h2><b>3</b>Zwykłe nagranie → wersja „z kilku kamer”</h2>
+    <div class="task"><b>Z jednej kamery nie powstanie prawdziwy drugi kąt.</b> Robimy cięcie + zbliżenie kadru („druga kamera”) i wstawki — zdjęcia albo krótkie filmy, pod którymi głos leci dalej.</div>
+    <h3 class="steps-h">Krok 1. AI układa plan montażu</h3>
+    <p>W <a href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a>: „+” → prześlij nagranie (darmowe konto: do 5 minut wideo) → wklej:</p>
+    <div class="prompt"><pre id="p-montaz">Jesteś montażystą. To nagranie jednej osoby z jednej kamery. Zaproponuj plan montażu, żeby wyglądało jak nagrane kilkoma kamerami. Podziel nagranie na fragmenty po 5–15 sekund. Dla każdego podaj w tabeli: czas od–do, ujęcie (szerokie / zbliżenie / bardzo bliskie), czy dać wstawkę (zdjęcie albo krótki film) i co ma na niej być. Wstawki daj tam, gdzie mowa o czymś, co da się pokazać. Nie zmieniaj ujęcia w połowie zdania.</pre><button class="btn small" data-copy="p-montaz">Kopiuj</button></div>
+    <h3 class="steps-h">Krok 2. Wykonujesz plan w edytorze</h3>
+    <ol class="steps">
+      <li><p><strong>Podziel</strong> nagranie w czasach z tabeli.</p></li>
+      <li><p>Co drugi kawałek <strong>przytnij ciaśniej na twarz</strong> — to udaje drugą kamerę.</p></li>
+      <li><p><strong>Zdjęcie albo film połóż nad nagraniem</strong> w miejscu wstawki; dźwięk wstawki wycisz.</p></li>
+      <li><p>Obejrzyj i <strong>pobierz</strong>.</p></li>
+    </ol>
+    <div class="box"><h3>Darmowe narzędzia</h3>
+      <ul class="links">
+        <li><span class="lab"><strong>Laptop:</strong> <a href="https://www.canva.com" target="_blank" rel="noopener">Canva</a> (bez elementów z koroną = bez znaku wodnego) albo <a href="https://app.clipchamp.com" target="_blank" rel="noopener">Clipchamp</a> (konto Microsoft, eksport 1080p bez znaku wodnego).</span></li>
+        <li><span class="lab"><strong>Telefon:</strong> iPhone — iMovie; Android — VN. Oba po polsku.</span></li>
+        <li><span class="lab"><strong>Wstawki:</strong> <a href="https://www.pexels.com/pl-pl/" target="_blank" rel="noopener">Pexels</a> i <a href="https://pixabay.com/pl/" target="_blank" rel="noopener">Pixabay</a> — darmowe zdjęcia i filmy.</span></li>
+        <li><span class="lab"><strong>Płatne, gdy montujesz regularnie:</strong> CapCut Pro, Descript, Captions, Submagic — robią zbliżenia i wstawki same.</span></li>
+      </ul>
+    </div>
+    <p class="note">Nagranie osoby to jej wizerunek — publikujemy za zgodą. Dzieci na stronie i FB szkoły — tylko ze zgodą rodziców. Nagrań z dziećmi nie wrzucamy do darmowego czatu.</p>
+  </section>
+
+  <section class="set" id="plakaty">
+    <p class="kicker">Problem z maila 2</p>
+    <h2><b>4</b>Plakaty i posty w jednym stylu</h2>
+    <div class="task"><b>AI robi obraz bez napisów, tekst dopisujesz Ty.</b> Generatory obrazów mylą polskie litery — napis wpisany ręcznie zawsze jest poprawny.</div>
+    <h3 class="steps-h">Przepis na styl — część STYL ustal raz, zmieniaj tylko TEMAT</h3>
+    <div class="prompt"><pre id="p-styl">Stwórz grafikę do serii postów na Facebooka i stronę internetową szkoły podstawowej.
+
+STYL (zawsze taki sam – nie zmieniaj):
+- płaska ilustracja wektorowa, miękkie zaokrąglone kształty, delikatna faktura papieru
+- paleta tylko 4 kolory: granat (#1F3A5F), słoneczny żółty (#F2C14E), mięta (#7FC8A9), kremowe tło (#FAF6EE)
+- ciepły, przyjazny nastrój, dużo powietrza, bez fotorealizmu, bez neonów i ostrych cieni
+- postacie ludzi uproszczone, bez szczegółów twarzy, bez rozpoznawalnych osób
+
+KOMPOZYCJA (zawsze taka sama):
+- format pionowy 4:5
+- górne 40% obrazu całkowicie puste: jednolite kremowe tło, bez żadnych elementów – tu później dopiszę tytuł
+- ilustracja tylko w dolnych 60% obrazu
+- margines ok. 8% przy każdej krawędzi, nic ważnego przy brzegach
+
+ZAKAZY:
+- żadnych liter, cyfr, napisów, podpisów, logo, tabliczek z tekstem ani znaków wodnych
+- żadnych zdjęć prawdziwych dzieci ani realistycznych twarzy
+
+TEMAT (zmieniam za każdym razem):
+[tu wpisz temat, np. „Dzień Pluszowego Misia w bibliotece szkolnej”]</pre><button class="btn small" data-copy="p-styl">Kopiuj</button></div>
+    <p>Następny obraz serii — w tym samym czacie:</p>
+    <div class="prompt"><pre id="p-styl2">Zachowaj dokładnie ten sam styl, paletę, kompozycję i pusty górny obszar co na poprzedniej grafice. Zmień tylko temat na: [nowy temat]. Bez żadnego tekstu na obrazie.</pre><button class="btn small" data-copy="p-styl2">Kopiuj</button></div>
+    <h3 class="steps-h">Tekst dopisujesz w jednym z narzędzi</h3>
+    <ol class="steps">
+      <li><p><strong>Google Slides:</strong> Plik → Ustawienia strony → Niestandardowy 1080 × 1350 px → obraz jako tło → pole tekstowe. Następny post: Duplikuj slajd. Pobierz → PNG.</p></li>
+      <li><p><strong>Canva:</strong> Post na Facebooka → wgraj obraz → tytuł i data → „Zrób kopię” na następny post.</p></li>
+      <li><p><strong>Canva Magic Design:</strong> wpisz temat — Canva sama proponuje szablony. Szybko, ale często podobne do siebie.</p></li>
+    </ol>
+    <details class="extra"><summary>Masz już posty, które się podobają? <span>AI napisze przepis za Ciebie</span></summary>
+      <p>Wgraj do czatu 2–3 zrzuty ekranu swoich postów i wklej:</p>
+      <div class="prompt"><pre id="p-styl3">Opisz styl tych grafik jako przepis do generatora obrazów w tym samym układzie: STYL, KOMPOZYCJA (z pustym miejscem na tytuł), ZAKAZY, TEMAT.</pre><button class="btn small" data-copy="p-styl3">Kopiuj</button></div>
+    </details>
+    <p class="hint">Na dłużej: Canva dla Edukacji — darmowa dla zweryfikowanych nauczycieli, z zestawem marki szkoły (logo, kolory, czcionki).</p>
+  </section>
+
+  <section class="set" id="notebook">
+    <p class="kicker">Gemini Notebook (dawniej NotebookLM)</p>
+    <h2>Wideo z Waszych materiałów</h2>
+    <p>Notatnik → <strong>Studio</strong> → <strong>Przegląd wideo</strong> → „Krótkie” (około minuty, pionowo) albo „Film objaśniający” (poziomo) → <strong>Wygeneruj</strong>. Liczy się długo, czasem ponad pół godziny — zostaw kartę otwartą. Film powtarza źródła, także ich błędy: obejrzyj przed pokazaniem klasie.</p>
+    <div class="row"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz Gemini Notebook ↗</a></div>
+  </section>
+
+  <footer><span>AI proponuje, <b>Ty decydujesz</b>.</span><span>Łukasz Kasprzyk</span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch (_) {}
+    ta.remove(); return ok;
+  }
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  const el = document.getElementById(b.dataset.copy); if (!el) return;
+  if (await copyText(el.textContent.trim())) {
+    toast("Skopiowano — teraz wklej w czacie");
+    if (!b.dataset.label) b.dataset.label = b.textContent;
+    b.textContent = "Skopiowano ✓"; b.classList.add("done");
+    setTimeout(() => { b.textContent = b.dataset.label; b.classList.remove("done"); }, 1600);
+  } else {
+    toast("Nie udało się skopiować — zaznacz tekst myszą i naciśnij Ctrl+C");
+  }
+});
+</script>
+</body>
+</html>

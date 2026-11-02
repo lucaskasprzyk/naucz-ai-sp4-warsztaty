@@ -135,8 +135,8 @@
     <div class="picker">
       <a class="pick" href="#doradca"><b>1</b><span class="pt">Doradca problemu</span><span class="pw">AI dopytuje, proponuje 2–3 sposoby i pierwszy krok</span></a>
       <a class="pick" href="#poprawiacz"><b>2</b><span class="pt">Poprawiacz polecenia</span><span class="pw">gdy AI robi nie to, o co prosisz</span></a>
-      <a class="pick" href="#wideo"><b>3</b><span class="pt">Nagranie „z kilku kamer”</span><span class="pw">plan montażu od AI + darmowe edytory</span></a>
-      <a class="pick" href="#plakaty"><b>4</b><span class="pt">Plakaty i posty w jednym stylu</span><span class="pw">przepis na styl + tekst w Slides albo Canvie</span></a>
+      <a class="pick" href="#wideo"><b>3</b><span class="pt">Nagranie „z kilku kamer”</span><span class="pw">plan montażu od AI + Canva</span></a>
+      <a class="pick" href="#plakaty"><b>4</b><span class="pt">Plakaty i posty w jednym stylu</span><span class="pw">ChatGPT, Gemini + Canva, Canva AI</span></a>
     </div>
   </div>
 
@@ -196,19 +196,19 @@ Moje polecenie:
     <h3 class="steps-h">Krok 1. AI układa plan montażu</h3>
     <p>W <a href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a>: „+” → prześlij nagranie (darmowe konto: do 5 minut wideo) → wklej:</p>
     <div class="prompt"><pre id="p-montaz">Jesteś montażystą. To nagranie jednej osoby z jednej kamery. Zaproponuj plan montażu, żeby wyglądało jak nagrane kilkoma kamerami. Podziel nagranie na fragmenty po 5–15 sekund. Dla każdego podaj w tabeli: czas od–do, ujęcie (szerokie / zbliżenie / bardzo bliskie), czy dać wstawkę (zdjęcie albo krótki film) i co ma na niej być. Wstawki daj tam, gdzie mowa o czymś, co da się pokazać. Nie zmieniaj ujęcia w połowie zdania.</pre><button class="btn small" data-copy="p-montaz">Kopiuj</button></div>
-    <h3 class="steps-h">Krok 2. Wykonujesz plan w edytorze</h3>
+    <h3 class="steps-h">Krok 2. Wykonujesz plan w Canvie</h3>
     <ol class="steps">
-      <li><p><strong>Podziel</strong> nagranie w czasach z tabeli.</p></li>
-      <li><p>Co drugi kawałek <strong>przytnij ciaśniej na twarz</strong> — to udaje drugą kamerę.</p></li>
-      <li><p><strong>Zdjęcie albo film połóż nad nagraniem</strong> w miejscu wstawki; dźwięk wstawki wycisz.</p></li>
-      <li><p>Obejrzyj i <strong>pobierz</strong>.</p></li>
+      <li><p><strong>Utwórz → Film</strong> → Przesyłanie → wgraj nagranie → kliknij, żeby trafiło na oś czasu.</p></li>
+      <li><p>Ustaw znacznik w czasie z tabeli → kliknij nagranie → klawisz <strong>S</strong> (albo prawy przycisk → Podziel). Powtórz dla każdego cięcia.</p></li>
+      <li><p>Co drugi kawałek: <strong>dwuklik w film na stronie</strong> → przeciągnij róg obrazu na zewnątrz, ustaw twarz w kadrze → Gotowe. To udaje drugą kamerę.</p></li>
+      <li><p>Elementy → wpisz temat (np. „biblioteka”) → Filmy → wybierz film <strong>bez korony</strong> i <strong>przeciągnij</strong> go na pasek nad nagraniem. Kliknięcie wstawia go w środek nagrania — przeciągaj. Skróć do długości wstawki.</p></li>
+      <li><p>Obejrzyj → Udostępnij → Pobierz → MP4. Bez elementów z koroną nie ma znaku wodnego.</p></li>
     </ol>
-    <div class="box"><h3>Darmowe narzędzia</h3>
+    <div class="box"><h3>Przydatne</h3>
       <ul class="links">
-        <li><span class="lab"><strong>Laptop:</strong> <a href="https://www.canva.com" target="_blank" rel="noopener">Canva</a> (bez elementów z koroną = bez znaku wodnego) albo <a href="https://app.clipchamp.com" target="_blank" rel="noopener">Clipchamp</a> (konto Microsoft, eksport 1080p bez znaku wodnego).</span></li>
-        <li><span class="lab"><strong>Telefon:</strong> iPhone — iMovie; Android — VN. Oba po polsku.</span></li>
-        <li><span class="lab"><strong>Wstawki:</strong> <a href="https://www.pexels.com/pl-pl/" target="_blank" rel="noopener">Pexels</a> i <a href="https://pixabay.com/pl/" target="_blank" rel="noopener">Pixabay</a> — darmowe zdjęcia i filmy.</span></li>
-        <li><span class="lab"><strong>Płatne, gdy montujesz regularnie:</strong> CapCut Pro, Descript, Captions, Submagic — robią zbliżenia i wstawki same.</span></li>
+        <li><span class="lab"><strong>Darmowe wstawki:</strong> <a href="https://www.pexels.com/pl-pl/" target="_blank" rel="noopener">Pexels</a> i <a href="https://pixabay.com/pl/" target="_blank" rel="noopener">Pixabay</a>.</span></li>
+        <li><span class="lab"><strong>AI tnie i robi zbliżenia samo:</strong> <a href="https://www.gling.ai" target="_blank" rel="noopener">Gling</a>, <a href="https://www.opus.pro" target="_blank" rel="noopener">OpusClip</a> — po angielsku, za darmo ze znakiem wodnym.</span></li>
+        <li><span class="lab"><strong>Prawdziwy drugi kąt:</strong> drugi telefon z boku. AI go nie wymyśli.</span></li>
       </ul>
     </div>
     <p class="note">Nagranie osoby to jej wizerunek — publikujemy za zgodą. Dzieci na stronie i FB szkoły — tylko ze zgodą rodziców. Nagrań z dziećmi nie wrzucamy do darmowego czatu.</p>
@@ -217,8 +217,13 @@ Moje polecenie:
   <section class="set" id="plakaty">
     <p class="kicker">Problem z maila 2</p>
     <h2><b>4</b>Plakaty i posty w jednym stylu</h2>
-    <div class="task"><b>AI robi obraz bez napisów, tekst dopisujesz Ty.</b> Generatory obrazów mylą polskie litery — napis wpisany ręcznie zawsze jest poprawny.</div>
-    <h3 class="steps-h">Przepis na styl — część STYL ustal raz, zmieniaj tylko TEMAT</h3>
+    <div class="task"><b>Jeden przepis na styl = seria, która wygląda jak jedna rodzina.</b> ChatGPT robi plakat od razu z napisem. W Gemini bezpieczniej obraz bez napisów, a tekst dopisujesz w Canvie. Litery i daty zawsze sprawdzasz Ty.</div>
+    <h3 class="steps-h">Droga 1. ChatGPT — plakat od razu z napisem</h3>
+    <div class="prompt"><pre id="p-gpt">Stwórz plakat do serii postów szkoły podstawowej. STYL (zawsze taki sam): płaska ilustracja wektorowa, miękkie zaokrąglone kształty, delikatna faktura papieru; paleta tylko: granat #1F3A5F, słoneczny żółty #F2C14E, mięta #7FC8A9, kremowe tło #FAF6EE; postacie uproszczone, bez szczegółów twarzy. KOMPOZYCJA: pion 4:5, u góry duży tytuł granatową zaokrągloną czcionką, pod nim podtytuł, ilustracja w dolnych 60%. TEKST na plakacie dokładnie tak, z polskimi znakami: tytuł „[tytuł]”, podtytuł „[data · miejsce]”. Żadnych innych napisów. TEMAT: [temat].</pre><button class="btn small" data-copy="p-gpt">Kopiuj</button></div>
+    <p>Następny plakat serii — w tym samym czacie:</p>
+    <div class="prompt"><pre id="p-gpt2">Zachowaj dokładnie ten sam styl, paletę, czcionkę i układ. Nowy temat: [temat]. Tytuł „[tytuł]”, podtytuł „[data · miejsce]”.</pre><button class="btn small" data-copy="p-gpt2">Kopiuj</button></div>
+    <h3 class="steps-h">Droga 2. Gemini robi obraz, Ty dopisujesz tekst</h3>
+    <p>Przepis na styl — część STYL ustal raz, zmieniaj tylko TEMAT:</p>
     <div class="prompt"><pre id="p-styl">Stwórz grafikę do serii postów na Facebooka i stronę internetową szkoły podstawowej.
 
 STYL (zawsze taki sam – nie zmieniaj):
@@ -241,12 +246,17 @@ TEMAT (zmieniam za każdym razem):
 [tu wpisz temat, np. „Dzień Pluszowego Misia w bibliotece szkolnej”]</pre><button class="btn small" data-copy="p-styl">Kopiuj</button></div>
     <p>Następny obraz serii — w tym samym czacie:</p>
     <div class="prompt"><pre id="p-styl2">Zachowaj dokładnie ten sam styl, paletę, kompozycję i pusty górny obszar co na poprzedniej grafice. Zmień tylko temat na: [nowy temat]. Bez żadnego tekstu na obrazie.</pre><button class="btn small" data-copy="p-styl2">Kopiuj</button></div>
-    <h3 class="steps-h">Tekst dopisujesz w jednym z narzędzi</h3>
+    <h3 class="steps-h">Tekst dopisujesz w Canvie</h3>
     <ol class="steps">
-      <li><p><strong>Google Slides:</strong> Plik → Ustawienia strony → Niestandardowy 1080 × 1350 px → obraz jako tło → pole tekstowe. Następny post: Duplikuj slajd. Pobierz → PNG.</p></li>
-      <li><p><strong>Canva:</strong> Post na Facebooka → wgraj obraz → tytuł i data → „Zrób kopię” na następny post.</p></li>
-      <li><p><strong>Canva Magic Design:</strong> wpisz temat — Canva sama proponuje szablony. Szybko, ale często podobne do siebie.</p></li>
+      <li><p>Utwórz → Niestandardowy rozmiar <strong>1080 × 1350 px</strong> → Przesyłanie → wgraj obraz → kliknij go → prawy przycisk → <strong>„Ustaw obraz jako tło”</strong>.</p></li>
+      <li><p>Klawisz <strong>T</strong> → dwuklik → tytuł. Czcionka z polskimi znakami (np. Nunito, Poppins — sprawdź ą, ę, ń). Kolor: ikonka A → <strong>„Kolory zdjęć”</strong>.</p></li>
+      <li><p>Drugi tekst: data i miejsce.</p></li>
+      <li><p>Następny post: <strong>„Powiel stronę”</strong> → przeciągnij nowy obraz → prawy przycisk → <strong>„Zastąp tło”</strong> → zmień tekst.</p></li>
+      <li><p>Udostępnij → Pobierz → PNG.</p></li>
     </ol>
+    <p class="hint">Bez Canvy: to samo w Prezentacjach Google — Plik → Ustawienia strony → 1080 × 1350 px, obraz jako tło, Duplikuj slajd.</p>
+    <h3 class="steps-h">Droga 3. Canva AI — gotowiec w 30 sekund</h3>
+    <p>Canva AI → wpisz temat i datę → odpowiedz na pytania o odbiorców → gotowy post do poprawek. Szybko, ale każdy temat wychodzi w innym stylu.</p>
     <details class="extra"><summary>Masz już posty, które się podobają? <span>AI napisze przepis za Ciebie</span></summary>
       <p>Wgraj do czatu 2–3 zrzuty ekranu swoich postów i wklej:</p>
       <div class="prompt"><pre id="p-styl3">Opisz styl tych grafik jako przepis do generatora obrazów w tym samym układzie: STYL, KOMPOZYCJA (z pustym miejscem na tytuł), ZAKAZY, TEMAT.</pre><button class="btn small" data-copy="p-styl3">Kopiuj</button></div>
@@ -259,6 +269,14 @@ TEMAT (zmieniam za każdym razem):
     <h2>Wideo z Waszych materiałów</h2>
     <p>Notatnik → <strong>Studio</strong> → <strong>Przegląd wideo</strong> → „Krótkie” (około minuty, pionowo) albo „Film objaśniający” (poziomo) → <strong>Wygeneruj</strong>. Liczy się długo, czasem ponad pół godziny — zostaw kartę otwartą. Film powtarza źródła, także ich błędy: obejrzyj przed pokazaniem klasie.</p>
     <div class="row"><a class="btn ghost small" href="https://notebooklm.google.com" target="_blank" rel="noopener">Otwórz Gemini Notebook ↗</a></div>
+  </section>
+
+  <section class="set" id="wideo-ai">
+    <p class="kicker">Generowanie wideo z AI</p>
+    <h2>Film z jednego opisu</h2>
+    <p>Za darmo: <a href="https://vids.new" target="_blank" rel="noopener">Google Vids</a> → „Twórz filmy” → wklej opis → „Wstaw” (60 s klipów na miesiąc, klip do 10 s). Opis z pokazu:</p>
+    <div class="prompt"><pre id="p-mis">Noc w szkolnej bibliotece. Pluszowy miś na półce budzi się, przeciąga, zeskakuje na stół i otwiera wielką książkę, z której wylatują świecące litery i zamieniają się w motyle. Kamera powoli najeżdża od szerokiego planu do zbliżenia. Ciepłe światło lampki, kinowy styl, ciche dźwięki kartek i cicha muzyka.</pre><button class="btn small" data-copy="p-mis">Kopiuj</button></div>
+    <p class="note">Bez zdjęć uczniów i twarzy prawdziwych osób. Film z AI podpisujemy: „wygenerowane przez AI”.</p>
   </section>
 
   <footer><span>AI proponuje, <b>Ty decydujesz</b>.</span><span>Łukasz Kasprzyk</span></footer>

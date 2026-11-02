@@ -193,10 +193,14 @@ Moje polecenie:
     <p class="kicker">Problem z maila 1</p>
     <h2><b>3</b>Zwykłe nagranie → wersja „z kilku kamer”</h2>
     <div class="task"><b>Z jednej kamery nie powstanie prawdziwy drugi kąt.</b> Robimy cięcie + zbliżenie kadru („druga kamera”) i wstawki — zdjęcia albo krótkie filmy, pod którymi głos leci dalej.</div>
-    <h3 class="steps-h">Krok 1. AI układa plan montażu</h3>
-    <p>W <a href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a>: „+” → prześlij nagranie (darmowe konto: do 5 minut wideo) → wklej:</p>
-    <div class="prompt"><pre id="p-montaz">Jesteś montażystą. To nagranie jednej osoby z jednej kamery. Zaproponuj plan montażu, żeby wyglądało jak nagrane kilkoma kamerami. Podziel nagranie na fragmenty po 5–15 sekund. Dla każdego podaj w tabeli: czas od–do, ujęcie (szerokie / zbliżenie / bardzo bliskie), czy dać wstawkę (zdjęcie albo krótki film) i co ma na niej być. Wstawki daj tam, gdzie mowa o czymś, co da się pokazać. Nie zmieniaj ujęcia w połowie zdania.</pre><button class="btn small" data-copy="p-montaz">Kopiuj</button></div>
-    <h3 class="steps-h">Krok 2. Wykonujesz plan w Canvie</h3>
+    <h3 class="steps-h">Krok 1. AI układa plan i mówi, co kliknąć</h3>
+    <p>W <a href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a>: „+” → prześlij nagranie (darmowe konto: do 5 minut wideo) → wklej i w nawiasie wpisz swoje narzędzie:</p>
+    <div class="prompt"><pre id="p-montaz">Jesteś montażystą i cierpliwym instruktorem dla osoby, która montuje pierwszy raz. To nagranie jednej osoby z jednej kamery. Montuję w: [NARZĘDZIE, np. Canva w przeglądarce na komputerze].
+
+1. Plan: zaproponuj montaż, żeby wyglądało jak nagrane kilkoma kamerami. W tabeli podaj: czas od–do, ujęcie (szerokie / zbliżenie / bardzo bliskie), czy dać wstawkę (zdjęcie albo krótki film) i co ma na niej być. Wstawki daj tam, gdzie mowa o czymś, co da się pokazać. Nie zmieniaj ujęcia w połowie zdania.
+
+2. Instrukcja: napisz krok po kroku, co kliknąć w moim narzędziu, żeby wykonać ten plan — jeden krok = jedna czynność, nazwy przycisków tak, jak je widać w programie po polsku. Jeśli nie jesteś pewny nazwy przycisku albo czy funkcja jest w darmowej wersji, napisz to wprost.</pre><button class="btn small" data-copy="p-montaz">Kopiuj</button></div>
+    <h3 class="steps-h">Krok 2. Wykonujesz plan — przykład dla Canvy</h3>
     <ol class="steps">
       <li><p><strong>Utwórz → Film</strong> → Przesyłanie → wgraj nagranie → kliknij, żeby trafiło na oś czasu.</p></li>
       <li><p>Ustaw znacznik w czasie z tabeli → kliknij nagranie → klawisz <strong>S</strong> (albo prawy przycisk → Podziel). Powtórz dla każdego cięcia.</p></li>

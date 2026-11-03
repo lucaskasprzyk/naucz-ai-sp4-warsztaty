@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ocena opisowa · klasy 1–3</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#193042;background:#f2f5f8;font-size:17px}
+    *{box-sizing:border-box}body{margin:0}button,input,textarea{font:inherit}button{cursor:pointer;min-height:48px;border:1px solid #b6c4cf;border-radius:10px;background:white;color:#193042;padding:12px 16px;font-weight:600}button:hover{background:#edf4fa}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #c16500;outline-offset:3px}button:disabled{cursor:default;opacity:.55}
+    header{padding:25px 32px;background:#193d54;color:white}h1{font-size:1.65rem;margin:0 0 6px}header p{margin:0;color:#d5e5ef}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1300px;margin:auto;min-height:85vh}aside{padding:26px 20px;border-right:1px solid #d3dce4}h2{font-size:1.3rem;margin:0 0 18px}h3{font-size:1.1rem;margin:0 0 13px}.students{display:grid;gap:10px;margin-bottom:20px}.student{text-align:left;overflow-wrap:anywhere}.student[aria-pressed=true]{background:#193d54;color:white;border-color:#193d54}.add{width:100%;border:2px dashed #8399a9}main{padding:28px;min-width:0}.panel{background:white;border:1px solid #dbe2e8;border-radius:15px;padding:22px;margin-bottom:18px}.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.choice{text-align:left;font-weight:400;line-height:1.5}.choice strong{display:block;font-size:.94rem;margin-bottom:8px}.choice[aria-pressed=true]{background:#e0f3ec;border:2px solid #167457;padding:11px 15px}.choice[aria-pressed=true] strong::before{content:'✓ '}.help{font-size:.9rem;color:#526574;line-height:1.5}.title-row{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:16px}.title-row h2{margin:0;overflow-wrap:anywhere}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.primary{background:#16664e;color:white;border-color:#16664e}.primary:hover{background:#104f3c}textarea{display:block;width:100%;min-height:230px;resize:vertical;padding:15px;border:1px solid #8da1b0;border-radius:9px;line-height:1.7}input{width:100%;padding:12px;border:1px solid #8da1b0;border-radius:8px;min-height:48px}label{display:block;margin:12px 0 8px;font-weight:600}[hidden]{display:none!important}.notice{color:#784500;background:#fff4dc;padding:12px;border-radius:8px}.status{min-height:1.5em;font-size:.9rem;color:#355d4e}footer{padding:0 28px 25px;color:#526574;font-size:.85rem}.small{font-size:.88rem}fieldset{min-width:0;border:0;padding:0;margin:0}legend{font-weight:700;margin-bottom:13px;font-size:1.1rem}
+    @media(max-width:850px){.layout{grid-template-columns:210px minmax(0,1fr)}.choices{grid-template-columns:1fr}main{padding:20px}}
+    @media(max-width:570px){.layout{display:block}aside{border-right:0;border-bottom:1px solid #d3dce4;padding:20px}.students{grid-template-columns:repeat(3,minmax(0,1fr))}.student{padding:10px;font-size:.9rem}header{padding:22px}main{padding:16px}.panel{padding:17px}.title-row{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header><h1>Ocena opisowa</h1><p>Klasy 1–3 · wybierz zdania, dopracuj ocenę i skopiuj.</p></header>
+  <div class="layout">
+    <aside aria-label="Lista uczniów">
+      <h2>Uczniowie</h2><div id="students" class="students"></div>
+      <button id="show-add" class="add" type="button">+ Dodaj ucznia</button>
+      <form id="add-form" hidden>
+        <label for="new-name">Imię lub oznaczenie ucznia</label><input id="new-name" maxlength="80" required autocomplete="off">
+        <div class="actions"><button class="primary" type="submit">Dodaj</button><button id="cancel-add" type="button">Anuluj</button></div>
+      </form>
+      <p class="help">Dane są zapisywane w tej przeglądarce na tym urządzeniu. Aplikacja działa bez internetu i niczego nie wysyła.</p>
+      <p id="save-status" class="status" role="status"></p>
+    </aside>
+    <main>
+      <div class="title-row"><h2 id="student-title"></h2><button id="rename" type="button">Zmień imię</button></div>
+      <form id="rename-form" class="panel" hidden><label for="rename-name">Nowe imię lub oznaczenie</label><input id="rename-name" maxlength="80" required autocomplete="off"><div class="actions"><button class="primary" type="submit">Zapisz imię</button><button id="cancel-rename" type="button">Anuluj</button></div></form>
+      <p class="help">Wybierz jeden poziom w każdym obszarze. Zdania dopasuj do obserwacji i etapu nauki dziecka.</p>
+      <div id="areas"></div>
+      <section class="panel" aria-labelledby="assessment-title">
+        <h2 id="assessment-title">Gotowa ocena do poprawienia</h2>
+        <p id="progress" class="help"></p>
+        <label for="assessment">Treść oceny opisowej</label>
+        <textarea id="assessment" placeholder="Kliknij poziomy powyżej. Tutaj pojawi się ocena, którą możesz swobodnie poprawiać."></textarea>
+        <p id="manual-notice" class="help notice" hidden>Tekst był poprawiany ręcznie. Nowe wybory są zapisane, ale nie zmieniają Twojej wersji. Przycisk „Ułóż ponownie z wyborów” zastąpi ją zdaniami z aktualnych wyborów.</p>
+        <div class="actions"><button id="copy" class="primary" type="button">Kopiuj ocenę</button><button id="compose" type="button">Ułóż ponownie z wyborów</button></div>
+        <p id="copy-status" class="status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+  <footer>Zapis lokalny nie jest kopią zapasową. Wyczyszczenie danych przeglądarki lub tryb prywatny może usunąć oceny. Gotowy tekst skopiuj do swojego dokumentu.</footer>
+  <script>
+    'use strict';
+    const KEY = 'oceny-opisowe-v1';
+    const levels = ['Potrzebuje wsparcia', 'Rozwija umiejętność', 'Działa samodzielnie'];
+    const areas = [
+      {key:'reading',name:'Czytanie',sentences:[
+        'Z pomocą nauczyciela rozpoznaje litery i łączy je w sylaby oraz krótkie wyrazy. Potrzebuje dalszych ćwiczeń w czytaniu.',
+        'Czyta krótkie, znane teksty i odpowiada na proste pytania dotyczące ich treści, czasem korzystając ze wskazówek.',
+        'Samodzielnie czyta teksty dostosowane do etapu nauki i opowiada o ich treści.'
+      ]},
+      {key:'writing',name:'Pisanie',sentences:[
+        'Pisze litery i krótkie wyrazy z pomocą nauczyciela. Potrzebuje ćwiczeń w kształtnym zapisie i utrwalaniu poznanych zasad.',
+        'Zapisuje wyrazy i proste zdania. Z pomocą sprawdza poprawność zapisu i coraz częściej dba o czytelność pisma.',
+        'Samodzielnie tworzy krótkie wypowiedzi pisemne dostosowane do etapu nauki, dbając o czytelność i stosując poznane zasady pisowni.'
+      ]},
+      {key:'counting',name:'Liczenie',sentences:[
+        'Z pomocą nauczyciela i na konkretach wykonuje działania w poznanym zakresie. Potrzebuje wsparcia w rozumieniu prostych zadań.',
+        'Wykonuje działania w poznanym zakresie i rozwiązuje proste zadania tekstowe, czasem korzystając ze wskazówek lub pomocy do liczenia.',
+        'Samodzielnie wykonuje działania w poznanym zakresie, rozwiązuje zadania dostosowane do etapu nauki i wyjaśnia swój sposób rozumowania.'
+      ]},
+      {key:'cooperation',name:'Współpraca',sentences:[
+        'Podczas pracy z innymi potrzebuje wsparcia w dzieleniu się zadaniami, słuchaniu oraz czekaniu na swoją kolej.',
+        'Włącza się w pracę pary lub grupy i wykonuje uzgodnione zadania. Czasem potrzebuje przypomnienia o wysłuchaniu innych.',
+        'Współpracuje z innymi, słucha ich pomysłów, dzieli się zadaniami i wnosi własny wkład we wspólną pracę.'
+      ]},
+      {key:'behavior',name:'Zachowanie',sentences:[
+        'Potrzebuje częstych przypomnień o ustalonych zasadach oraz pomocy w wyrażaniu emocji i rozwiązywaniu nieporozumień.',
+        'Zwykle przestrzega ustalonych zasad. Po przypomnieniu wraca do zadania i podejmuje próby spokojnego rozwiązywania nieporozumień.',
+        'Przestrzega ustalonych zasad, odnosi się do innych z szacunkiem i stara się spokojnie rozwiązywać nieporozumienia, prosząc o pomoc, gdy jej potrzebuje.'
+      ]}
+    ];
+    const $ = id => document.getElementById(id);
+    const makeStudent = name => ({id: globalThis.crypto?.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2),name,choices:{},text:'',edited:false});
+    let storageError = false;
+    let state;
+    try {
+      const stored = localStorage.getItem(KEY);
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (!data || !Array.isArray(data.students) || !data.students.length || !data.students.every(s => s && typeof s.id==='string' && typeof s.name==='string' && typeof s.text==='string' && typeof s.edited==='boolean' && s.choices && typeof s.choices==='object' && areas.every(a => s.choices[a.key]===undefined || [0,1,2].includes(s.choices[a.key]))) || new Set(data.students.map(s=>s.id)).size!==data.students.length) throw new Error('Nieprawidłowy zapis');
+        state=data;
+      }
+    } catch (error) { storageError=true; }
+    if (!state) state={students:['Uczeń A','Uczeń B','Uczeń C'].map(makeStudent),active:null};
+    if (!state.students.some(s=>s.id===state.active)) state.active=state.students[0].id;
+    const current = () => state.students.find(s=>s.id===state.active);
+    const composed = s => areas.filter(a=>s.choices[a.key]!==undefined).map(a=>a.sentences[s.choices[a.key]]).join(' ');
+    function save() {
+      try {
+        if (storageError) throw new Error('Zapis niedostępny');
+        localStorage.setItem(KEY,JSON.stringify(state));
+        $('save-status').textContent='Zapisano w przeglądarce.';
+      } catch(error) {
+        $('save-status').textContent='Nie udało się zapisać danych. Pozostają w tej karcie - skopiuj oceny przed jej zamknięciem.';
+      }
+    }
+    function updateEditor() {
+      const s=current();
+      $('assessment').value=s.text;
+      $('manual-notice').hidden=!s.edited;
+      $('progress').textContent=`Wybrane obszary: ${areas.filter(a=>s.choices[a.key]!==undefined).length} z ${areas.length}.`;
+      $('copy').disabled=!s.text.trim();
+    }
+    function render() {
+      $('students').replaceChildren();
+      state.students.forEach(s=>{
+        const button=document.createElement('button');
+        button.type='button';button.className='student';button.textContent=s.name;button.setAttribute('aria-pressed',String(s.id===state.active));
+        button.onclick=()=>{state.active=s.id;$('rename-form').hidden=true;save();render();};
+        $('students').append(button);
+      });
+      $('student-title').textContent=current().name;
+      $('areas').replaceChildren();
+      areas.forEach(a=>{
+        const panel=document.createElement('section');panel.className='panel';
+        const field=document.createElement('fieldset');const legend=document.createElement('legend');legend.textContent=a.name;field.append(legend);
+        const choices=document.createElement('div');choices.className='choices';
+        a.sentences.forEach((sentence,index)=>{
+          const button=document.createElement('button');button.type='button';button.className='choice';button.setAttribute('aria-pressed',String(current().choices[a.key]===index));
+          const title=document.createElement('strong');title.textContent=levels[index];button.append(title,document.createTextNode(sentence));
+          button.onclick=()=>{
+            const s=current();s.choices[a.key]=index;if(!s.edited)s.text=composed(s);
+            choices.querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===index)));
+            save();updateEditor();$('copy-status').textContent='';
+          };
+          choices.append(button);
+        });field.append(choices);panel.append(field);$('areas').append(panel);
+      });
+      updateEditor();$('copy-status').textContent='';
+    }
+    $('assessment').addEventListener('input',()=>{
+      current().text=$('assessment').value;current().edited=true;save();
+      $('manual-notice').hidden=false;$('copy').disabled=!current().text.trim();$('copy-status').textContent='';
+    });
+    $('compose').onclick=()=>{
+      if(current().edited && !confirm('Zastąpić ręcznie poprawiony tekst zdaniami z aktualnych wyborów?'))return;
+      current().text=composed(current());current().edited=false;save();updateEditor();$('copy-status').textContent='Ułożono ocenę z aktualnych wyborów.';
+    };
+    $('copy').onclick=async()=>{
+      const text=current().text;
+      try {
+        if(!navigator.clipboard?.writeText)throw new Error('Użyj zaznaczenia');
+        await navigator.clipboard.writeText(text);
+        $('copy-status').textContent='Skopiowano ocenę.';
+      } catch(error) {
+        const editor=$('assessment');editor.focus();editor.select();editor.setSelectionRange(0,editor.value.length);
+        let copied=false;try{copied=document.execCommand('copy');}catch(error){}
+        $('copy-status').textContent=copied?'Skopiowano ocenę.':'Tekst jest zaznaczony. Naciśnij Ctrl+C (Windows) lub ⌘C (Mac), aby go skopiować.';
+      }
+    };
+    $('show-add').onclick=()=>{$('add-form').hidden=false;$('new-name').focus();};
+    $('cancel-add').onclick=()=>{$('add-form').hidden=true;$('new-name').value='';};
+    $('add-form').onsubmit=event=>{
+      event.preventDefault();const name=$('new-name').value.trim();if(!name){$('new-name').focus();return;}
+      const s=makeStudent(name);state.students.push(s);state.active=s.id;$('new-name').value='';$('add-form').hidden=true;$('rename-form').hidden=true;save();render();
+    };
+    $('rename').onclick=()=>{$('rename-form').hidden=false;$('rename-name').value=current().name;$('rename-name').focus();$('rename-name').select();};
+    $('cancel-rename').onclick=()=>{$('rename-form').hidden=true;};
+    $('rename-form').onsubmit=event=>{
+      event.preventDefault();const name=$('rename-name').value.trim();if(!name)return;
+      current().name=name;$('rename-form').hidden=true;save();render();
+    };
+    render();save();
+  </script>
+</body>
+</html>

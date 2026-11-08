@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Warsztat AI — spotkanie 4</title>
-<!-- Spotkanie 4: asystenci A1–A5 (instrukcje do skopiowania + fikcyjne materiały) i agenci G1–G4 (polecenia + gotowe wyniki w wyniki/). Jeden plik, bez bibliotek. Styl jak ../spotkanie-3/. -->
+<!-- Spotkanie 4: umiejętności A1–A6 (instrukcje do skopiowania + fikcyjne materiały) i agenci G1–G4 (polecenia + gotowe wyniki w wyniki/). Jeden plik, bez bibliotek. Styl jak ../spotkanie-3/. -->
 <style>
   /* Kolory i fonty jak ../index.html (slajdy spotkania 1: krem, terakota, Georgia + Arial). Tylko jasny motyw, jak prezentacja. */
   :root {
@@ -144,7 +144,7 @@
 <div class="wrap">
   <a class="back" href="../">← Spotkanie 1: Rozmowa z AI</a> · <a class="back" href="../spotkanie-2/">Spotkanie 2: NotebookLM</a> · <a class="back" href="../spotkanie-3/">Spotkanie 3: AI do Waszych problemów</a>
   <p class="eyebrow">Warsztat · spotkanie 4 · 9 listopada</p>
-  <h1>Asystenci i agenci AI</h1>
+  <h1>Umiejętności i agenci AI</h1>
   <p class="tagline">Umiejętność dla każdego, agent dla chętnych</p>
   <p class="sub">Podstawy AI dla nauczycieli · SP4 Bolesławiec. Instrukcje do skopiowania, materiały do ćwiczeń i gotowe wyniki agentów ze spotkania 4.</p>
 
@@ -152,7 +152,7 @@
     <h2>Zacznij tutaj</h2>
     <ol>
       <li>Jesteś na stronie warsztatu → spotkanie 4. Zostaw ją otwartą w jednej karcie.</li>
-      <li>Wybierz jeden temat umiejętności: <a href="#a1">A1</a>, <a href="#a2">A2</a>, <a href="#a3">A3</a>, <a href="#a4">A4</a>, <a href="#a5">A5</a> — albo własny (<a href="#sciaga">szablon w ściądze</a>).</li>
+      <li>Wybierz jeden temat umiejętności: <a href="#a1">A1</a>, <a href="#a2">A2</a>, <a href="#a3">A3</a>, <a href="#a4">A4</a>, <a href="#a5">A5</a>, <a href="#a6">A6</a> — albo własny (<a href="#sciaga">szablon w ściądze</a>).</li>
       <li>Skopiuj opis i instrukcję, utwórz umiejętność w <a href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a> (albo Projekt w <a href="https://chatgpt.com" target="_blank" rel="noopener">ChatGPT</a>). <a href="#gdzie">Gdzie kliknąć ↓</a></li>
       <li>Zrób 3 próby: typowe zadanie · brak ważnej informacji · nowa rozmowa. Polecenia testowe są przy każdym temacie.</li>
       <li>Gotowe? Spróbuj agenta: <a href="#agenci">G1–G4</a> (własny laptop z aplikacją ChatGPT).</li>
@@ -192,9 +192,9 @@
     <div class="picker">
       <a class="pick" href="#zmiana"><b>1</b><span class="pt">Asystent → umiejętność</span><span class="pw">co się zmieniło i gdzie to zbudować</span></a>
       <a class="pick" href="#sciaga"><b>2</b><span class="pt">Ściąga: jak zbudować umiejętność</span><span class="pw">8 punktów, 3 próby, szablon na własny temat</span></a>
-      <a class="pick" href="#asystenci"><b>3</b><span class="pt">Umiejętności A1–A5</span><span class="pw">opis, instrukcja, materiał startowy, polecenia testowe</span></a>
+      <a class="pick" href="#asystenci"><b>3</b><span class="pt">Umiejętności A1–A6</span><span class="pw">opis, instrukcja, materiał startowy, polecenia testowe</span></a>
       <a class="pick" href="#agenci"><b>4</b><span class="pt">Agenci G1–G4</span><span class="pw">polecenie startowe i gotowy wynik do obejrzenia</span></a>
-      <a class="pick" href="#testy"><b>5</b><span class="pt">Sprawdzanie testów z kartki</span><span class="pw">3 sposoby bez imion + następny test na papierze</span></a>
+      <a class="pick" href="#testy"><b>5</b><span class="pt">Sprawdziany z AI</span><span class="pw">uczciwy rachunek, 3 sposoby bez imion, następny test na papierze</span></a>
       <a class="pick" href="#bezpieczenstwo"><b>6</b><span class="pt">Bezpieczeństwo</span><span class="pw">4 zasady</span></a>
     </div>
   </div>
@@ -266,19 +266,20 @@ Przygotowujesz szkic; decyzję zostawiasz mnie.</pre><button class="btn small" d
           <li><p>Nowy czat <strong>w tym projekcie</strong> → wklej materiał i polecenie testowe.</p></li>
           <li><p>Zdjęcie kartki też działa — zamiast przepisywać, dodaj zdjęcie przez „+”.</p></li>
         </ol>
-        <p class="hint">Kroki wyżej są dla Projektu. Sprawdzone na darmowym koncie: wszystkie 5 tematów działa jako Projekt. Pole na opis „kiedy mnie użyć” pomijasz — w Projekcie go nie ma.</p>
+        <p class="hint">Kroki wyżej są dla Projektu. Sprawdzone na darmowym koncie: tematy A1–A5 działają jako Projekt. Pole na opis „kiedy mnie użyć” pomijasz — w Projekcie go nie ma.</p>
       </div>
     </div>
   </section>
 
   <!-- ===================== ASYSTENCI ===================== -->
-  <h2 class="group" id="asystenci">Umiejętności A1–A5</h2>
+  <h2 class="group" id="asystenci">Umiejętności A1–A6</h2>
   <div class="picker five">
     <a class="pick" href="#a1"><b>A1</b><span class="pt">Dostosowanie materiałów</span><span class="pw">wersja uproszczona, wg zaleceń z opinii, rozszerzona</span></a>
     <a class="pick" href="#a2"><b>A2</b><span class="pt">Wiadomość do rodzica</span><span class="pw">także odpowiedź na trudną wiadomość</span></a>
     <a class="pick" href="#a3"><b>A3</b><span class="pt">Informacja zwrotna</span><span class="pw">komentarz do pracy z Twoich notatek</span></a>
     <a class="pick" href="#a4"><b>A4</b><span class="pt">Plakaty w jednym stylu</span><span class="pw">seria plakatów szkoły</span></a>
     <a class="pick" href="#a5"><b>A5</b><span class="pt">Opinia o uczniu</span><span class="pw">szkic opinii z Twoich obserwacji</span></a>
+    <a class="pick" href="#a6"><b>A6</b><span class="pt">Sprawdzian, który łatwo sprawdzić</span><span class="pw">pytania bez pułapek, karta odpowiedzi, klucz</span></a>
   </div>
 
   <section class="set" id="a1">
@@ -385,9 +386,13 @@ Zawsze:
 - Gdy sprawa wymaga decyzji szkoły, pedagoga albo dyrektora, napisz to wprost pod szkicem.
 - Nie potrzebujesz danych osobowych — piszę „Uczeń A”, „Rodzic B”.</pre><button class="btn small" data-copy="p-a2">Kopiuj</button></div>
     <h3 class="steps-h">3. Materiał startowy</h3>
-    <p>2 Twoje dawne wiadomości bez imion (wklej na końcu instrukcji albo dodaj jako plik). Do trudnych wiadomości — fragment statutu o ocenianiu.</p>
-    <div class="box"><h3>Przykładowe materiały <span>fikcyjne</span></h3>
-      <details class="extra"><summary>Dwie dawne wiadomości <span>wzór stylu</span></summary>
+    <p>2 Twoje dawne wiadomości bez imion i zasady szkoły, na które asystent ma się powoływać. Oba pliki dodaj do umiejętności (Prześlij pliki) albo do Projektu w ChatGPT.</p>
+    <div class="box"><h3>Materiały do pobrania</h3>
+      <ul class="files">
+        <li><a class="file" href="dane/a2-zasady-oceniania-sp4.txt" download><span class="fname">a2-zasady-oceniania-sp4.txt</span><span class="fmeta">wyciąg ze statutu SP4 (2024), § 40 · 4 KB</span></a></li>
+        <li><a class="file" href="dane/a2-moje-dawne-wiadomosci.txt" download><span class="fname">a2-moje-dawne-wiadomosci.txt</span><span class="fmeta">2 wiadomości, wzór stylu (fikcyjne) · 1 KB</span></a></li>
+      </ul>
+      <details class="extra"><summary>Dwie dawne wiadomości <span>wzór stylu, do wklejenia</span></summary>
         <div class="prompt"><pre id="d-a2-wiad">Przykład 1:
 Szanowni Państwo,
 w piątek 10 października klasa 4b jedzie do kina Forum na film „Mój przyjaciel delfin”. Wyjazd spod szkoły o 9:00, powrót ok. 12:30. Koszt biletu i przejazdu: 28 zł — proszę o wpłatę do środy 8.10 na konto klasowe. Dzieci zabierają drugie śniadanie i wodę.
@@ -401,22 +406,14 @@ przypominam, że w przyszłym tygodniu kończymy zbiórkę nakrętek. Worki moż
 Pozdrawiam,
 wychowawczyni klasy 4b</pre><button class="btn small" data-copy="d-a2-wiad">Kopiuj</button></div>
       </details>
-      <details class="extra"><summary>Fragment statutu <span>ocenianie bieżące, wersja do ćwiczeń</span></summary>
-        <div class="prompt"><pre id="d-a2-stat">Fragment statutu szkoły (ocenianie bieżące) — wersja przykładowa do ćwiczeń:
-§ 40 ust. 9. Kartkówka obejmuje materiał z najwyżej dwóch ostatnich lekcji i nie musi być zapowiedziana.
-§ 40 ust. 10. Sprawdzian zapowiada się z co najmniej tygodniowym wyprzedzeniem i wpisuje do dziennika.
-§ 40 ust. 11. Nauczyciel oddaje sprawdzone prace w ciągu 2 tygodni.
-§ 40 ust. 12. Uczeń może poprawić ocenę niedostateczną z kartkówki lub sprawdzianu w terminie ustalonym z nauczycielem, nie później niż 2 tygodnie od oddania pracy.
-§ 40 ust. 13. Uczeń nieobecny na lekcji ma obowiązek uzupełnić wiadomości; nauczyciel może ustalić z nim termin napisania zaległej pracy.</pre><button class="btn small" data-copy="d-a2-stat">Kopiuj</button></div>
-      </details>
     </div>
-    <p class="note"><b>Wskazówka:</b> podepnij do umiejętności notatnik z Gemini Notebook ze statutem i regulaminami szkoły (Prześlij pliki → Notatniki). Wtedy odpowiedzi do rodziców opierają się na statucie. Na warsztacie użyj fikcyjnego fragmentu statutu z przykładu wyżej.</p>
+    <p class="note"><b>Dlaczego wyciąg, a nie cały statut:</b> krótki plik AI czyta w całości. W próbach z całym statutem (140 tys. znaków) w notatniku właściwego paragrafu nie znalazło. Na warsztacie użyj wyciągu § 40 — to prawdziwe zasady oceniania SP4. W instrukcji możesz dopisać: „Zasady szkoły bierz z dołączonego pliku i podawaj paragraf i ustęp”.</p>
     <h3 class="steps-h">4. Polecenia testowe</h3>
     <p>Próba 1 — typowe zadanie:</p>
     <div class="prompt"><pre id="t-a2-1">Wycieczka do Wrocławia 20 listopada, zbiórka 7:30 pod szkołą, koszt 95 zł, wpłaty do 13.11.</pre><button class="btn small" data-copy="t-a2-1">Kopiuj</button></div>
     <p>Próba 2 — trudna wiadomość:</p>
     <div class="prompt"><pre id="t-a2-2">Rodzic B pisze: „Uczeń A dostał jedynkę z kartkówki z materiału, którego nie było, bo był chory. To niesprawiedliwe, proszę ją usunąć, inaczej idę do dyrektora.” Kartkówka była z dwóch ostatnich lekcji, Uczeń A był nieobecny na jednej.</pre><button class="btn small" data-copy="t-a2-2">Kopiuj</button></div>
-    <p class="then">Dobrze, jeśli szkic jest spokojny, oparty na statucie, proponuje poprawę albo rozmowę i nie obiecuje usunięcia oceny. ChatGPT podsuwa „Połącz e-mail” — nie klikaj.</p>
+    <p class="then">Dobrze, jeśli szkic jest spokojny, powołuje się na § 40 ust. 10 (kartkówka najwyżej z dwóch ostatnich lekcji), proponuje poprawę albo rozmowę i nie obiecuje usunięcia oceny. ChatGPT podsuwa „Połącz e-mail” — nie klikaj.</p>
   </section>
 
   <section class="set" id="a3">
@@ -558,6 +555,43 @@ Notatki z obserwacji — Uczeń A:
     <p class="then">Dobrze, jeśli asystent odmówi sugerowania diagnozy i zaproponuje opis samych obserwacji. Na teście Gemini sam zauważył, że w poleceniu jest „dużo błędów”, a w notatce „dużo skreśleń”.</p>
   </section>
 
+  <section class="set" id="a6">
+    <p class="kicker">Umiejętność · każdy przedmiot, kl. 4–8 · 20 min</p>
+    <h2><b>A6</b>Sprawdzian, który łatwo sprawdzić</h2>
+    <div class="task"><b>AI pomaga przed sprawdzianem, nie zamiast Ciebie przy ocenianiu.</b> Pytania bez dwóch poprawnych odpowiedzi, karta odpowiedzi do sprawdzania „wzrokiem w dół kolumny” i klucz z przykładami punktacji 0–1–2. Progi ocen są wzięte ze statutu SP4 (§ 40 ust. 11 pkt 10).</div>
+    <h3 class="steps-h">1. Opis umiejętności (kiedy mnie użyć)</h3>
+    <p>Wklej w pole opisu w Gemini. Po tym zdaniu AI rozpozna, kiedy użyć umiejętności.</p>
+    <div class="prompt"><pre id="o-a6">Użyj, gdy nauczyciel przygotowuje sprawdzian albo kartkówkę z podanego materiału i chce pytań bez niejednoznaczności, karty odpowiedzi i klucza oceniania z przykładami punktacji.</pre><button class="btn small" data-copy="o-a6">Kopiuj</button></div>
+    <h3 class="steps-h">2. Instrukcja do wklejenia</h3>
+    <div class="prompt"><pre id="p-a6">Pomagasz mi przygotowywać sprawdziany i kartkówki dla uczniów szkoły podstawowej — tak, żeby łatwo je było sprawdzić.
+Pracujesz tylko na materiale, który podam (temat, notatki z lekcji, strony podręcznika). Nie dodawaj treści spoza niego.
+
+Przy każdym zamówieniu:
+1. Jeśli brakuje klasy, przedmiotu, zakresu materiału, czasu albo liczby zadań — zadaj najwyżej 3 pytania i poczekaj.
+2. Zadania zamknięte: jedna poprawna odpowiedź, dystraktory wiarygodne, ale jednoznacznie błędne.
+3. Zadania otwarte: krótkie polecenie; do każdego kryteria 0–1–2 pkt i trzy przykładowe odpowiedzi uczniów
+   (za 0, 1 i 2 pkt). Uznawaj poprawne rozwiązania w innej formie (słowami, rysunkiem, innym sposobem).
+4. Przejrzyj własne zadania: wypisz każde, które ma dwie poprawne odpowiedzi albo da się zrozumieć na dwa sposoby, i popraw je.
+5. Wynik w trzech częściach:
+   - SPRAWDZIAN dla ucznia (z miejscem na odpowiedzi, bez punktacji w treści poleceń, jeśli o to nie proszę),
+   - KARTA ODPOWIEDZI (numer zadania → kratka / linia), żeby sprawdzanie szło wzrokiem w dół jednej kolumny,
+   - KLUCZ dla mnie: poprawne odpowiedzi, kryteria punktowania, suma punktów i progi ocen.
+6. Progi ocen (statut SP4): celujący od 95%, bardzo dobry od 80%, dobry od 65%, dostateczny od 50%,
+   dopuszczający od 30%, niedostateczny poniżej 30%. Przelicz je na punkty tego sprawdzianu.
+7. Gdy zamawiam kartkówkę z więcej niż dwóch ostatnich lekcji, przypomnij, że w SP4 kartkówka obejmuje najwyżej dwie ostatnie lekcje.
+
+Na końcu wypisz, co mam sprawdzić przed drukiem. Ocenę ucznia wystawiam ja — Ty przygotowujesz narzędzie.
+Nie potrzebujesz danych uczniów.</pre><button class="btn small" data-copy="p-a6">Kopiuj</button></div>
+    <h3 class="steps-h">3. Materiał startowy</h3>
+    <p>Twoje notatki z dwóch ostatnich lekcji albo temat z podręcznika. Nie masz nic pod ręką? Klasa 4, matematyka, „porównywanie ułamków zwykłych”, 6 zadań, 20 minut.</p>
+    <h3 class="steps-h">4. Polecenia testowe</h3>
+    <p>Próba 1 — typowe zadanie:</p>
+    <div class="prompt"><pre id="t-a6-1">Klasa 4, matematyka, kartkówka 15 min z porównywania ułamków: 4 zadania zamknięte, 1 otwarte z uzasadnieniem.</pre><button class="btn small" data-copy="t-a6-1">Kopiuj</button></div>
+    <p>Próba 2 — zadanie z pułapką:</p>
+    <div class="prompt"><pre id="t-a6-2">Sprawdź to zadanie: „Które zwierzę lata? A. wróbel B. nietoperz C. kot D. pies”.</pre><button class="btn small" data-copy="t-a6-2">Kopiuj</button></div>
+    <p class="then">Dobrze, jeśli przy próbie 1 dostajesz trzy części (sprawdzian, karta odpowiedzi, klucz) z progami przeliczonymi na punkty, a przy próbie 2 asystent wskaże dwie poprawne odpowiedzi (wróbel i nietoperz) i zaproponuje poprawkę. Zadania i klucz i tak przeglądasz przed drukiem.</p>
+  </section>
+
   <!-- ===================== AGENCI ===================== -->
   <h2 class="group" id="agenci">Agenci G1–G4</h2>
   <section class="set">
@@ -582,36 +616,39 @@ Notatki z obserwacji — Uczeń A:
   </section>
 
   <div class="picker">
-    <a class="pick" href="#g1"><b>G1</b><span class="pt">Ładniejsza prezentacja z Gemini Notebook</span><span class="pw">zostawia edytowalny plik PowerPoint</span></a>
+    <a class="pick" href="#g1"><b>G1</b><span class="pt">30 sprawdzianów bez imion</span><span class="pw">zostawia kopie bez paska z imieniem i listę numer → plik</span></a>
     <a class="pick" href="#g2"><b>G2</b><span class="pt">Aplikacja ocen opisowych</span><span class="pw">zostawia plik, który działa w przeglądarce</span></a>
     <a class="pick" href="#g3"><b>G3</b><span class="pt">Sprawdzanie testów ze zdjęć</span><span class="pw">zostawia arkusz z punktami</span></a>
     <a class="pick" href="#g4"><b>G4</b><span class="pt">Wideo „z kilku kamer”</span><span class="pw">zostawia zmontowany film</span></a>
   </div>
 
   <section class="set" id="g1">
-    <p class="kicker">Agent · prezentacja</p>
-    <h2><b>G1</b>Poprawa wyglądu prezentacji z Gemini Notebook</h2>
-    <div class="task"><b>Agent zostawi:</b> nową, edytowalną prezentację PowerPoint (.pptx) z tą samą treścią, listę zmian „było → jest” i slajd „Sprawdź się”.</div>
-    <p><strong>Czego potrzebujesz:</strong> prezentacja pobrana z Gemini Notebook (PDF albo PPTX), opcjonalnie logo / kolory szkoły.</p>
-    <div class="prompt"><pre id="p-g1">W tym folderze jest prezentacja pobrana z Gemini Notebook. Chcę ją poprawić wizualnie i móc dalej edytować.
-1. Obejrzyj wszystkie slajdy i wypisz mi krótko, co na nich jest.
-2. Zrób nową, edytowalną prezentację PowerPoint (.pptx) z tą samą treścią:
-   - kolory: granat i żółty, jasne tło,
-   - duże, czytelne litery (dla klasy 4, wyświetlane na tablicy),
-   - jeden pomysł na slajd, najwyżej 4 punkty.
-3. Popraw literówki i wypisz KAŻDĄ zmianę tekstu: było → jest.
-4. Dodaj na końcu slajd „Sprawdź się” z 3 pytaniami do treści.
-Nie dodawaj faktów spoza prezentacji. Gdy coś jest nieczytelne, zapytaj.</pre><button class="btn small" data-copy="p-g1">Kopiuj</button></div>
+    <p class="kicker">Agent · sterta sprawdzianów</p>
+    <h2><b>G1</b>Anonimizacja 30 sprawdzianów</h2>
+    <div class="task"><b>Agent zostawi:</b> folder <code>anonimowe/</code> z kopiami prac bez paska z imieniem (praca-01, praca-02…) i plik <code>lista.csv</code> (numer pracy → oryginalny plik). Kopie możesz potem dać Gemini albo koleżance; lista zostaje tylko u Ciebie.</div>
+    <p><strong>Czego potrzebujesz:</strong> zdjęcia albo skany prac w folderze <code>prace/</code> (jedna praca = jeden plik), wszystkie z tego samego wzoru kartki z polem na imię u góry. Na warsztacie: 30 fikcyjnych skanów do pobrania niżej.</p>
+    <ul class="files">
+      <li><a class="file" href="dane/g1-prace-30-skanow.zip" download><span class="fname">g1-prace-30-skanow.zip</span><span class="fmeta">30 fikcyjnych kartkówek · 4,7 MB · rozpakuj do folderu agenta</span></a></li>
+    </ul>
+    <div class="prompt"><pre id="p-g1">W folderze prace/ są zdjęcia sprawdzianów. Na górze każdej kartki jest pasek z imieniem, nazwiskiem, klasą i datą — zajmuje górne 13% wysokości kartki.
+Twoje jedyne zadanie: zrobić kopie bez imion. Niczego nie oceniaj i nie odczytuj odpowiedzi.
+Najważniejsze: nie oglądaj żadnego zdjęcia z folderu prace/ — ani teraz, ani później.
+1. Napisz krótki program, który każdemu zdjęciu z prace/ odetnie górne 13% wysokości i zapisze kopię w nowym folderze anonimowe/ jako praca-01.jpg, praca-02.jpg… (w kolejności nazw plików). Oryginałów nie zmieniaj.
+2. Ten sam program zapisuje plik lista.csv: numer pracy, nazwa oryginalnego pliku, wysokość oryginału i kopii w pikselach.
+3. Sprawdź programem, nie wzrokiem, że KAŻDA kopia jest niższa od oryginału o około 13%. Jeśli choć jedna nie jest — zatrzymaj się, nie oglądaj żadnego obrazu i napisz mi, co poszło nie tak.
+4. Dopiero gdy sprawdzenie wyszło dobrze: obejrzyj 3 kopie z anonimowe/ (pierwszą, środkową i ostatnią) i potwierdź, że nie widać na nich imienia ani nazwiska, a pierwsze zadanie jest całe.
+5. Na koniec napisz krótko: ile plików przerobiłeś, wynik sprawdzenia wymiarów i ile to trwało.</pre><button class="btn small" data-copy="p-g1">Kopiuj</button></div>
+    <p class="hint"><strong>13% pasuje do kartki z warsztatu.</strong> Przy własnym sprawdzianie zmierz pasek na <strong>pustym wzorze</strong> (ile procent wysokości zajmuje pole na imię) i wpisz tę liczbę. Nie każ agentowi szukać imion na pracach uczniów.</p>
     <h3 class="steps-h">Gotowy wynik — przed i po</h3>
     <div class="media two">
-      <figure><img src="wyniki/g1/przed-slajd-2.jpg" alt="Slajd z Gemini Notebook przed poprawą" loading="lazy"><figcaption>Przed: slajd z Gemini Notebook</figcaption></figure>
-      <figure><img src="wyniki/g1/po-slajd-2.jpg" alt="Ten sam slajd po poprawie przez agenta: granat i żółty, duże litery" loading="lazy"><figcaption>Po: granat i żółty, duże litery</figcaption></figure>
+      <figure><img src="wyniki/g1-anonimizacja/przed-IMG_5101.jpg" alt="Fikcyjna kartkówka z imieniem i klasą u góry" loading="lazy"><figcaption>Przed: kartka z paskiem na imię (fikcyjne)</figcaption></figure>
+      <figure><img src="wyniki/g1-anonimizacja/po-praca-01.jpg" alt="Ta sama kartkówka bez paska z imieniem, zaczyna się od tytułu" loading="lazy"><figcaption>Po: praca-01.jpg — zaczyna się od tytułu</figcaption></figure>
     </div>
     <ul class="files">
-      <li><a class="file" href="wyniki/g1/obieg-wody-notebook.pdf" download><span class="fname">obieg-wody-notebook.pdf</span><span class="fmeta">przed · PDF · 247 KB</span></a></li>
-      <li><a class="file" href="wyniki/g1/obieg-wody-edytowalna.pptx" download><span class="fname">obieg-wody-edytowalna.pptx</span><span class="fmeta">po · PowerPoint · 38 KB · 7 slajdów</span></a></li>
+      <li><a class="file" href="wyniki/g1-anonimizacja/lista.csv" download><span class="fname">lista.csv</span><span class="fmeta">numer pracy → oryginalny plik · 1 KB</span></a></li>
     </ul>
-    <p class="then">Agent zgłosił „literówek nie znalazłem”, a dodał kropki i rozdzielił jedno zdanie. Tekst porównaj sam.</p>
+    <p class="then">Próba 4.11: 30 skanów w 86 sekund, imion nie ma na żadnej kopii. Agent sam dopisał bezpieczniki: nie nadpisuje oryginałów i zatrzymuje się, gdy wymiary się nie zgadzają.</p>
+    <p class="note"><b>Dlaczego kontrola wymiarów:</b> przy przygotowaniach narzędzie zgłosiło „gotowe”, a obrazów nie zmieniło — agent uwierzył i zobaczył imiona (fikcyjne). Agent sprawdza, czy narzędzie zadziałało, a nie czy wynik jest dobry — chyba że mu każesz. Dlatego polecenie każe sprawdzić wymiary programem, zanim agent obejrzy jakąkolwiek kartkę.</p>
   </section>
 
   <section class="set" id="g2">
@@ -686,16 +723,32 @@ Oryginału nie zmieniaj.</pre><button class="btn small" data-copy="p-g4">Kopiuj<
     <p class="hint">Porównaj ze spotkaniem 3: tam ten sam montaż robiliśmy ręcznie w Canvie. Agent nie dołoży prawdziwego drugiego kąta — robi cięcia i zbliżenia.</p>
   </section>
 
-  <!-- ===================== TESTY Z KARTKI ===================== -->
-  <h2 class="group" id="testy">Sprawdzanie testów z kartki</h2>
+  <!-- ===================== SPRAWDZIANY Z AI ===================== -->
+  <h2 class="group" id="testy">Sprawdziany z AI</h2>
   <section class="set">
-    <p class="kicker">100 testów na biurku</p>
+    <p class="kicker">Uczciwy rachunek</p>
+    <h2>AI nie sprawdza za Was — pomaga przed i wokół</h2>
+    <div class="tablewrap"><table>
+      <tr><th>Sterta prac na papierze</th><th>Ręcznie</th></tr>
+      <tr><td>30 sprawdzianów</td><td>ok. 55 min</td></tr>
+      <tr><td>200 sprawdzianów</td><td>ok. 6 h</td></tr>
+    </table></div>
+    <p class="hint">Szacunek: ok. 1 min 48 s na pracę. Ścieżka z AI przy papierze to zdjęcia, usunięcie imion, odczyt pisma dziecka i kontrola każdej odpowiedzi. Pomiaru, że wychodzi szybciej, nie mamy, a odczyt pisma bywa błędny.</p>
+    <h3 class="steps-h">Gdzie AI pomaga</h3>
+    <ol class="steps">
+      <li><p><strong>Przed sprawdzianem:</strong> pytania bez dwóch poprawnych odpowiedzi, karta odpowiedzi, klucz z przykładami punktacji — umiejętność <a href="#a6">A6</a>.</p></li>
+      <li><p><strong>Przy robocie wokół:</strong> usunięcie imion z 30 prac, zanim cokolwiek trafi do AI — agent <a href="#g1">G1</a>.</p></li>
+    </ol>
+  </section>
+
+  <section class="set">
+    <p class="kicker">Gdy jednak dajesz kartki AI</p>
     <h2>Jak dać kartki AI bez imion — 3 sposoby</h2>
     <ol class="steps">
       <li><p><strong>Karteczka zamiast imienia.</strong> Zaklej albo zagnij pasek z imieniem, dopisz numer z dziennika — dopiero potem zdjęcie. Lista „numer → uczeń” zostaje u Ciebie.</p></li>
       <li><p><strong>Gemini: zdjęcia z zasłoniętym imieniem, po 10 naraz.</strong> AI tylko przepisuje odpowiedzi do tabeli, punkty liczy arkusz z kluczem. Każda paczka w nowym czacie.</p>
         <div class="prompt"><pre id="p-przepisz">Przepisz odpowiedzi z tych zdjęć do tabeli: numer pracy, Z1, Z2, Z3… — tylko litery, nic nie oceniaj. Jeśli nie jesteś pewien odczytu, wpisz ?.</pre><button class="btn small" data-copy="p-przepisz">Kopiuj</button></div></li>
-      <li><p><strong>Agent sam odcina pasek z imieniem,</strong> zanim cokolwiek przeczyta, a listę numer → plik zostawia u Ciebie. Polecenie: <a href="#g3">G3</a>. Działa, gdy pole na imię jest zawsze w tym samym miejscu.</p></li>
+      <li><p><strong>Agent sam odcina pasek z imieniem,</strong> zanim cokolwiek przeczyta, a listę numer → plik zostawia u Ciebie. Polecenie: <a href="#g1">G1</a>. Działa, gdy pole na imię jest zawsze w tym samym miejscu.</p></li>
     </ol>
     <p class="then">Zawsze: sprawdź ręcznie kilka prac i wszystkie „?”. Odczyt pisma bywa błędny, a za otwarte AI tylko proponuje punkty — o ocenie decydujesz Ty.</p>
   </section>
@@ -717,8 +770,8 @@ Oryginału nie zmieniaj.</pre><button class="btn small" data-copy="p-g4">Kopiuj<
     <ol class="steps">
       <li><p><strong>Zero danych osobowych</strong> — „Uczeń A”, „Rodzic B”.</p></li>
       <li><p><strong>Agent widzi tylko wskazany folder</strong> — nie dawaj mu folderu z prawdziwymi ocenami.</p></li>
-      <li><p><strong>Agent pyta przed ryzykownym krokiem</strong> — czytaj, zanim klikniesz.</p></li>
-      <li><p><strong>Wynik zawsze sprawdzasz Ty.</strong></p></li>
+      <li><p><strong>Czytaj, zanim zatwierdzisz krok</strong> — agent pokazuje, co chce zrobić.</p></li>
+      <li><p><strong>Wynik zawsze akceptujesz Ty — a zanim zaakceptujesz, sprawdzasz.</strong></p></li>
     </ol>
     <p class="hint">Wszystkie materiały i wyniki na tej stronie są fikcyjne — uczniowie, notatki i prace; osoba na nagraniu G4 jest wygenerowana przez AI.</p>
   </section>
